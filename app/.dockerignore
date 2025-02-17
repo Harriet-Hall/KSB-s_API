@@ -1,0 +1,9 @@
+.env
+test_api.py
+test_models.py
+.git
+.pytest_cache
+bin
+include
+lib
+pyvenv.cfg

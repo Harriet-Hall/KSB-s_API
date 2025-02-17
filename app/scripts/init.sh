@@ -1,0 +1,1 @@
+psql -U $POSTGRES_USER -d $POSTGRES_DATABASE -a -f scripts/dump.sql
