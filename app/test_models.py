@@ -34,7 +34,7 @@ def test_table_is_seeded(test_database):
         assert len(rows) == 4
         
 
-def test_insert_entry_into_table(test_database):
+def test_create_ksb_entry(test_database):
 
     Ksb.create(
         ksb_type= "Knowledge",
@@ -47,6 +47,7 @@ def test_insert_entry_into_table(test_database):
 
     new_row = rows[-1]
     assert new_row.id 
-    assert new_row.ksb_type == "Knowledge"
-    assert new_row.ksb_code == 1
-    assert new_row.description == "Test description"
+    assert new_row.ksb_type == "Knowledge" and isinstance(new_row.ksb_type, str)
+    assert new_row.ksb_code == 1 and isinstance(new_row.ksb_code, int)
+    assert new_row.description == "Test description" and isinstance(new_row.description, str)
+    
