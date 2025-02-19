@@ -64,10 +64,18 @@ def test_create_ksb_entry_with_valid_ksb_types(test_database):
     rows = Ksb.select()
 
     assert len(rows) == 7
-    assert rows[4].ksb_type == 'knowledge'
-    assert rows[5].ksb_type == 'skill'
-    assert rows[6].ksb_type == 'behaviour'
+    assert rows[4].ksb_type == 'Knowledge'
+    assert rows[5].ksb_type == 'Skill'
+    assert rows[6].ksb_type == 'Behaviour'
     
     
+def test_ksb_types_first_letter_is_capitalised(test_database):
+    Ksb.create(
+    ksb_type= "knowledge",
+    ksb_code= 1,
+    description="Test description",
+)
 
-    
+    rows = Ksb.select()
+    assert rows[4].ksb_type == "Knowledge"
+        
