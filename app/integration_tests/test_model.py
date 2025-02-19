@@ -88,4 +88,5 @@ def test_error_raised_when_ksb_type_is_invalid():
     )
         assert value_error.value == "ski1111 is not a valid ksb_type"
         
+
     
