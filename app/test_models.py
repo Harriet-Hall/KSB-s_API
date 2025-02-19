@@ -45,7 +45,7 @@ def test_create_ksb_entry(test_database):
     rows = Ksb.select()
     assert len(rows) == 5
 
-    new_row = rows[-1]
+    new_row = rows[4]
     assert new_row.id 
     assert new_row.ksb_type == "Knowledge" and isinstance(new_row.ksb_type, str)
     assert new_row.ksb_code == 1 and isinstance(new_row.ksb_code, int)
