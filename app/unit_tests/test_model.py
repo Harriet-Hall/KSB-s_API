@@ -1,3 +1,4 @@
+import pytest
 from database import Ksb, Model, BaseModel
 
 def test_Ksb_model():  
@@ -21,6 +22,13 @@ def test_ksb_type_validator():
     ksb.ksb_type_validator()
     assert ksb.ksb_type == ksb_type_values[i].capitalize()
   
+  
+def test_error_raised_if_ksb_type_is_invalid():
+    with pytest.raises(ValueError) as value_error:      
+      ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c10123", ksb_type = "behave", ksb_code = 2, description = "Test description")
+      ksb.ksb_type_validator()
+      assert value_error.value == f"{ksb.ksb_type} is not a valid ksb_type"
+    
   
 def test_ksb_type_first_letter_is_capitalised():
     ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c10123", ksb_type = "skill", ksb_code = 2, description = "Test description")
