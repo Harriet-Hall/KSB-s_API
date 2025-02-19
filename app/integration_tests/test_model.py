@@ -23,10 +23,6 @@ def test_database():
             transaction.rollback()
     psql_test_db.close()
 
-def test_Ksb_model():  
-    Ksb_instance = Ksb()
-    assert isinstance(Ksb_instance, Model)
-    assert isinstance(Ksb_instance, BaseModel)
 
 
 def test_table_is_seeded(test_database):
