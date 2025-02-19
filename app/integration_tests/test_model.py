@@ -50,7 +50,7 @@ def test_create_ksb_entry(test_database):
 
 
 def test_create_ksb_entry_with_valid_ksb_types(test_database):
-    ksb_type_values = ['knowledge', 'skill', 'behaviour']
+    ksb_type_values = ['Knowledge', 'knowledge', 'Skill', 'skill', 'Behaviour', 'behaviour']
     for ksb_type_value in ksb_type_values:
         Ksb.create(
         ksb_type=f"{ksb_type_value}",
@@ -59,10 +59,11 @@ def test_create_ksb_entry_with_valid_ksb_types(test_database):
         )
     rows = Ksb.select()
 
-    assert len(rows) == 7
-    assert rows[4].ksb_type == 'Knowledge'
-    assert rows[5].ksb_type == 'Skill'
-    assert rows[6].ksb_type == 'Behaviour'
+    assert len(rows) == 10
+    new_rows = rows[4:]
+    for i, row in enumerate(new_rows):
+        assert row.ksb_type == ksb_type_values[i].capitalize()
+
     
     
 def test_ksb_types_first_letter_is_capitalised(test_database):
@@ -75,7 +76,7 @@ def test_ksb_types_first_letter_is_capitalised(test_database):
     rows = Ksb.select()
     assert rows[4].ksb_type == "Knowledge"
     
-def test_error_raised_when_ksb_type_is_invalid():
+def test_error_raised_when_ksb_type_is_invalid(test_database):
     with pytest.raises(ValueError) as value_error:
         Ksb.create(
         ksb_type= "ski1111",
