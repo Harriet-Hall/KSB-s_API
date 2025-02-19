@@ -22,4 +22,8 @@ def test_ksb_type_validator():
     assert ksb.ksb_type == ksb_type_values[i].capitalize()
   
   
+def test_ksb_type_first_letter_is_capitalised():
+    ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c10123", ksb_type = "skill", ksb_code = 2, description = "Test description")
+    ksb.ksb_type_validator()
+    assert ksb.ksb_type == "Skill"
   
