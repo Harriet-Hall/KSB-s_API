@@ -20,9 +20,19 @@ class BaseModel(Model):
 
 
 class Ksb(BaseModel):
- id = UUIDField(primary_key=True)
- ksb_type = CharField()
- ksb_code = IntegerField()
- description = TextField()
+  KSB_TYPE_CHOICES = [
+    'Knowledge', 'knowledge',
+    'Skill', 'skill',
+    'Behaviour', 'behaviour'
+        ]
+  id = UUIDField(primary_key=True)
+  ksb_type = CharField(choices=KSB_TYPE_CHOICES)
+  ksb_code = IntegerField()
+  description = TextField()
 
-
+  def save(self, **kwargs):
+    if self.ksb_type not in self.KSB_TYPE_CHOICES:
+      raise ValueError(f"{self.ksb_type} is not a valid ksb_type")
+    else:
+      self.ksb_type = self.ksb_type.capitalize()
+      super(Ksb, self).save(**kwargs)

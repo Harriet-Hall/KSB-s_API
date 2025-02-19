@@ -78,4 +78,14 @@ def test_ksb_types_first_letter_is_capitalised(test_database):
 
     rows = Ksb.select()
     assert rows[4].ksb_type == "Knowledge"
+    
+def test_error_raised_when_ksb_type_is_invalid():
+    with pytest.raises(ValueError) as value_error:
+        Ksb.create(
+        ksb_type= "ski1111",
+        ksb_code= 1,
+        description="Test description",
+    )
+        assert value_error.value == "ski1111 is not a valid ksb_type"
         
+    
