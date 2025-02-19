@@ -51,3 +51,23 @@ def test_create_ksb_entry(test_database):
     assert new_row.ksb_code == 1 and isinstance(new_row.ksb_code, int)
     assert new_row.description == "Test description" and isinstance(new_row.description, str)
     
+
+
+def test_create_ksb_entry_with_valid_ksb_types(test_database):
+    ksb_type_values = ['knowledge', 'skill', 'behaviour']
+    for ksb_type_value in ksb_type_values:
+        Ksb.create(
+        ksb_type=f"{ksb_type_value}",
+        ksb_code= 1,
+        description="Test description",
+        )
+    rows = Ksb.select()
+
+    assert len(rows) == 7
+    assert rows[4].ksb_type == 'knowledge'
+    assert rows[5].ksb_type == 'skill'
+    assert rows[6].ksb_type == 'behaviour'
+    
+    
+
+    
