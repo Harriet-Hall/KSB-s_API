@@ -26,13 +26,16 @@ class Ksb(BaseModel):
     'Behaviour', 'behaviour'
         ]
   id = UUIDField(primary_key=True)
-  ksb_type = CharField(choices=KSB_TYPE_CHOICES)
+  ksb_type = CharField()
   ksb_code = IntegerField()
   description = TextField()
 
-  def save(self, **kwargs):
+  def ksb_type_validator(self):
     if self.ksb_type not in self.KSB_TYPE_CHOICES:
       raise ValueError(f"{self.ksb_type} is not a valid ksb_type")
     else:
       self.ksb_type = self.ksb_type.capitalize()
-      super(Ksb, self).save(**kwargs)
+    
+  def save(self, **kwargs):
+    self.ksb_type_validator()
+    super(Ksb, self).save(**kwargs)
