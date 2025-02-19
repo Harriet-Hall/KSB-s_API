@@ -18,12 +18,13 @@ phases:
     commands:
       - cd app/
       - echo "Building Docker image..."
-      - docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/app:latest" .
+      - docker build -t "$DOCKER_REGISTRY_USERNAME/app:latest" .
+      # - docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/app:latest" .
   
   post_build:
     commands:
       - echo "Pushing image to Docker Hub"
-      - docker push "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/app:latest"
+      - docker push "$DOCKER_REGISTRY_USERNAME/app:latest"
       - echo "Build completed successfully!"
 artifacts:
   files:
