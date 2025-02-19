@@ -35,3 +35,7 @@ def test_ksb_type_first_letter_is_capitalised():
     ksb.ksb_type_validator()
     assert ksb.ksb_type == "Skill"
   
+def test_save_calls_ksb_type_validator():
+    ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c10456", ksb_type = "behaviour", ksb_code = 3, description = "Test description")
+    ksb.save()
+    assert ksb.ksb_type == "Behaviour"
