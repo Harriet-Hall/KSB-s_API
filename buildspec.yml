@@ -19,7 +19,8 @@ phases:
       - cd app/
       - echo "Building Docker image..."
       - docker build -t "$DOCKER_REGISTRY_USERNAME/app:latest" .
-      # - docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/app:latest" .
+      - docker tag "$DOCKER_REGISTRY_USERNAME/app:latest" "$DOCKER_REGISTRY_USERNAME/app:latest"
+      
   
   post_build:
     commands:
