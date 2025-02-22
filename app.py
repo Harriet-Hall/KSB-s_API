@@ -20,20 +20,21 @@ def ksbs():
     return jsonify(ksbs)
 
 
-@app.route("/knowledge")
-def knowledge():
-    
-    knowledge_ksbs = Ksb.select().where(Ksb.ksb_type == "Knowledge")
-    knowledge = [
+@app.route("/<ksb_type>")
+def ksb_by_type(ksb_type):
+    print(ksb_type.lower(), "lower")
+    filtered_list = Ksb.select().where(Ksb.ksb_type == ksb_type.capitalize())
+    print(filtered_list, "!!!!!!!!!!!!!")
+    ksb_list = [
         {
             "id": ksb.id,
             "type": ksb.ksb_type,
             "code": ksb.ksb_code,
             "description": ksb.description,
         }
-        for ksb in knowledge_ksbs
+        for ksb in filtered_list
     ]
-    return jsonify(knowledge)
+    return jsonify(ksb_list)
     
     
     

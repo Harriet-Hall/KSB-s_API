@@ -55,3 +55,10 @@ def test_get_request_to_knowledge_endpoint_returns_list_of_knowledge_ksbs(mock_c
   assert len(response_data) == 2
   for ksb in response_data:
       assert ksb["type"] == "Knowledge"
+      
+def test_get_request_to_skill_endpoint_returns_list_of_skill_ksbs(mock_client, test_database):
+  response = mock_client.get("/skill")
+  response_data = json.loads(response.data)
+  assert len(response_data) == 1
+  for ksb in response_data:
+      assert ksb["type"] == "Skill"
