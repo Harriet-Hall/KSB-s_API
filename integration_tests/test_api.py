@@ -45,3 +45,9 @@ def test_get_request_to_home_endpoint_returns_list_of_ksbs(mock_client, test_dat
   for key in keys:
     assert key in ["id", "type", "code", "description"]
 
+def test_get_request_to_knowledge_endpoint_returns_list_of_knowledge_ksbs(mock_client, test_database):
+  response = mock_client.get("/knowledge")
+  response_data = json.loads(response.data)
+  assert len(response_data) == 2
+  for ksb in response_data:
+      assert ksb["type"] == "Knowledge"
