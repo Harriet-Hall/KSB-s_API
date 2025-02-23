@@ -1,30 +1,54 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from database import Ksb
 
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def ksbs():
-    ksbs = Ksb.select()
 
-    ksbs = [
-        {
-            "id": ksb.id,
-            "type": ksb.ksb_type,
-            "code": ksb.ksb_code,
-            "description": ksb.description,
-        }
-        for ksb in ksbs
-    ]
-    return jsonify(ksbs)
+    if request.method == "GET":
+
+        ksbs = Ksb.select()
+
+        ksbs = [
+            {
+                "id": ksb.id,
+                "type": ksb.ksb_type,
+                "code": ksb.ksb_code,
+                "description": ksb.description,
+            }
+            for ksb in ksbs
+        ]
+        return jsonify(ksbs)
+
+    elif request.method == "POST":
+        new_row = Ksb.create(**request.json)
+        new_ksb = Ksb.select().where(
+            Ksb.ksb_type == new_row.ksb_type,
+            Ksb.ksb_code == new_row.ksb_code,
+            Ksb.description == new_row.description,
+        )
+        ksb = new_ksb[0]
+
+        response = jsonify(
+            {
+                "id": ksb.id,
+                "type": ksb.ksb_type,
+                "code": ksb.ksb_code,
+                "description": ksb.description,
+            }
+        )
+
+        response.status_code = 201
+        return response
 
 
 @app.route("/<ksb_type>")
 def ksb_by_type(ksb_type):
-    print(ksb_type.lower(), "lower")
+
     filtered_list = Ksb.select().where(Ksb.ksb_type == ksb_type.capitalize())
-    print(filtered_list, "!!!!!!!!!!!!!")
+
     ksb_list = [
         {
             "id": ksb.id,
@@ -35,9 +59,7 @@ def ksb_by_type(ksb_type):
         for ksb in filtered_list
     ]
     return jsonify(ksb_list)
-    
-    
-    
+
 
 if __name__ == "__main__":
     app.run(debug=True)

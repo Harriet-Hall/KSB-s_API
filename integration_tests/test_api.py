@@ -5,21 +5,25 @@ import pytest
 from peewee import PostgresqlDatabase
 import os
 
+
 @pytest.fixture
 def test_app():
     yield app
 
+
 @pytest.fixture
 def mock_client(test_app):
     return test_app.test_client()
+
 
 psql_test_db = PostgresqlDatabase(
     os.getenv("TEST_DATABASE"),
     host=os.getenv("TEST_HOST"),
     user=os.getenv("TEST_USER"),
     password=os.getenv("TEST_PASSWORD"),
-    port=os.getenv("TEST_PORT")
+    port=os.getenv("TEST_PORT"),
 )
+
 
 @pytest.fixture
 def test_database():
@@ -31,41 +35,67 @@ def test_database():
         finally:
             transaction.rollback()
     psql_test_db.close()
-        
+
 
 def test_get_request_to_home_endpoint_returns_200(mock_client):
-  response = mock_client.get("/")
-  assert response.status_code == 200
+    response = mock_client.get("/")
+    assert response.status_code == 200
+
 
 def test_get_request_to_home_endpoint_returns_list_of_ksbs(mock_client, test_database):
-  response = mock_client.get("/")
-  response_data = json.loads(response.data)
-  assert len(response_data) == 4
-  keys = response_data[0].keys()
-  for key in keys:
-    assert key in ["id", "type", "code", "description"]
-    
-def test_get_request_to_knowledge_endpoint_returns_200(mock_client, test_database):
-  response = mock_client.get("/knowledge")
-  assert response.status_code == 200
+    response = mock_client.get("/")
+    response_data = json.loads(response.data)
+    assert len(response_data) == 4
+    keys = response_data[0].keys()
+    for key in keys:
+        assert key in ["id", "type", "code", "description"]
 
-def test_get_request_to_knowledge_endpoint_returns_list_of_knowledge_ksbs(mock_client, test_database):
-  response = mock_client.get("/knowledge")
-  response_data = json.loads(response.data)
-  assert len(response_data) == 2
-  for ksb in response_data:
-      assert ksb["type"] == "Knowledge"
-      
-def test_get_request_to_skill_endpoint_returns_list_of_skill_ksbs(mock_client, test_database):
-  response = mock_client.get("/skill")
-  response_data = json.loads(response.data)
-  assert len(response_data) == 1
-  for ksb in response_data:
-      assert ksb["type"] == "Skill"
-      
-def test_get_request_to_behaviour_endpoint_returns_list_of_behaviour_ksbs(mock_client, test_database):
-  response = mock_client.get("/behaviour")
-  response_data = json.loads(response.data)
-  assert len(response_data) == 1
-  for ksb in response_data:
-      assert ksb["type"] == "Behaviour"
+
+def test_get_request_to_knowledge_endpoint_returns_200(mock_client, test_database):
+    response = mock_client.get("/knowledge")
+    assert response.status_code == 200
+
+
+def test_get_request_to_knowledge_endpoint_returns_list_of_knowledge_ksbs(
+    mock_client, test_database
+):
+    response = mock_client.get("/knowledge")
+    response_data = json.loads(response.data)
+    assert len(response_data) == 2
+    for ksb in response_data:
+        assert ksb["type"] == "Knowledge"
+
+
+def test_get_request_to_skill_endpoint_returns_list_of_skill_ksbs(
+    mock_client, test_database
+):
+    response = mock_client.get("/skill")
+    response_data = json.loads(response.data)
+    assert len(response_data) == 1
+    for ksb in response_data:
+        assert ksb["type"] == "Skill"
+
+
+def test_get_request_to_behaviour_endpoint_returns_list_of_behaviour_ksbs(
+    mock_client, test_database
+):
+    response = mock_client.get("/behaviour")
+    response_data = json.loads(response.data)
+    assert len(response_data) == 1
+    for ksb in response_data:
+        assert ksb["type"] == "Behaviour"
+
+
+def test_post_a_ksb_to_home_endpoint(mock_client, test_database):
+    data = {
+        "ksb_type": "Knowledge",
+        "ksb_code": 12,
+        "description": "Test description",
+    }
+    response = mock_client.post("/", json=data)
+    assert response.status_code == 201
+    response_data = json.loads(response.data)
+    assert len(str(response_data["id"])) == 36
+    assert response_data["type"] == "Knowledge"
+    assert response_data["code"] == 12
+    assert response_data["description"] == "Test description"
