@@ -32,27 +32,35 @@ def ksbs():
             return response
 
         else:
-            new_row = Ksb.create(**request.json)
-            new_ksb = Ksb.select().where(
-                Ksb.ksb_type == new_row.ksb_type,
-                Ksb.ksb_code == new_row.ksb_code,
-                Ksb.description == new_row.description,
-            )
+            try:
 
-            
-            ksb = new_ksb[0]
-            response = jsonify(
-                {
-                    "id": ksb.id,
-                    "type": ksb.ksb_type,
-                    "code": ksb.ksb_code,
-                    "description": ksb.description,
-                }
-            )
+                new_row = Ksb.create(**request.json)
 
-            response.status_code = 201
+                new_ksb = Ksb.select().where(
+                    Ksb.ksb_type == new_row.ksb_type,
+                    Ksb.ksb_code == new_row.ksb_code,
+                    Ksb.description == new_row.description,
+                )
 
-            return response
+                
+                ksb = new_ksb[0]
+                response = jsonify(
+                    {
+                        "id": ksb.id,
+                        "type": ksb.ksb_type,
+                        "code": ksb.ksb_code,
+                        "description": ksb.description,
+                    }
+                )
+
+                response.status_code = 201
+                return response
+            except ValueError as value_error:
+                response = jsonify({"error": str(value_error)})
+                response.status_code = 400
+                return response
+
+      
 
 
 @app.route("/<ksb_type>")

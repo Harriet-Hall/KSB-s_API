@@ -111,3 +111,19 @@ def test_post_a_ksb_to_home_endpoint_that_already_exists(mock_client, test_datab
     response_data = json.loads(response.data)
     assert response_data["error"] == "Ksb already exists in database"
     assert len(Ksb.select()) == 4
+    
+def test_post_ksb_with_invalid_ksb_type(mock_client, test_database):
+    data = {
+        "ksb_type": "invalid",
+        "ksb_code": 10,
+        "description": "Assess identified and potential security threats and take appropriate action based on likelihood v impact.",
+    }
+    response = mock_client.post("/", json=data)
+    assert response.status_code == 400
+    response_data = json.loads(response.data)
+    print(response_data)
+    assert response_data["error"] == "invalid is not a valid ksb_type"
+    
+    
+
+    
