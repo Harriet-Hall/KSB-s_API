@@ -90,7 +90,7 @@ def test_post_a_ksb_to_home_endpoint(mock_client, test_database):
     data = {
         "ksb_type": "Knowledge",
         "ksb_code": 12,
-        "description": "Test description",
+        "description": "Test description"
     }
     response = mock_client.post("/", json=data)
     assert response.status_code == 201
@@ -109,6 +109,5 @@ def test_post_a_ksb_to_home_endpoint_that_already_exists(mock_client, test_datab
     response = mock_client.post("/", json=data)
     assert response.status_code == 409
     response_data = json.loads(response.data)
-    
     assert response_data["error"] == "Ksb already exists in database"
-    
+    assert len(Ksb.select()) == 4
