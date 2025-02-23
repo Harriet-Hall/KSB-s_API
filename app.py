@@ -30,10 +30,9 @@ def ksbs():
             response = jsonify({"error" : "Ksb already exists in database"})
             response.status_code = 409
             return response
-    
-        else:
-            new_row = Ksb.create(**request.json).save()
 
+        else:
+            new_row = Ksb.create(**request.json)
             new_ksb = Ksb.select().where(
                 Ksb.ksb_type == new_row.ksb_type,
                 Ksb.ksb_code == new_row.ksb_code,
@@ -52,6 +51,7 @@ def ksbs():
             )
 
             response.status_code = 201
+
             return response
 
 
