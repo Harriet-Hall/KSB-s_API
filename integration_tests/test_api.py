@@ -125,5 +125,17 @@ def test_post_ksb_with_invalid_ksb_type(mock_client, test_database):
     assert response_data["error"] == "invalid is not a valid ksb_type"
     
     
-
+def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
+    data = {
+        "ksb_type": "behaviour",
+        "ksb_code": 100,
+        "description": "Assess identified and potential security threats and take appropriate action based on likelihood v impact.",
+    }
+    response = mock_client.post("/", json=data)
+    assert response.status_code == 400
+    response_data = json.loads(response.data)
+    print(response_data)
+    assert response_data["error"] == "100 is not a valid ksb_code, choose a number from 1 to 25"
+    
+    
     
