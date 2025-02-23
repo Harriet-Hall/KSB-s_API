@@ -29,8 +29,12 @@ def ksbs():
             Ksb.ksb_code == new_row.ksb_code,
             Ksb.description == new_row.description,
         )
+        if len(new_ksb) > 1:
+            response = jsonify({"error" : "Ksb already exists in database"})
+            response.status_code = 409
+            return response
+        
         ksb = new_ksb[0]
-
         response = jsonify(
             {
                 "id": ksb.id,
