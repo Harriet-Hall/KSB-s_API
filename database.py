@@ -16,8 +16,6 @@ psql_db = PostgresqlDatabase(
 class BaseModel(Model):
   class Meta:
     database = psql_db
-    # table_name = "Ksbs"
-
 
 class Ksb(BaseModel):
   KSB_TYPE_CHOICES = [
@@ -42,4 +40,6 @@ class Ksb(BaseModel):
        
   def save(self, **kwargs):
     self.ksb_type_validator()
+    self.ksb_code_validator()
+    
     super(Ksb, self).save(**kwargs)
