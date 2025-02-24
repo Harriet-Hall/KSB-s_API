@@ -36,7 +36,10 @@ class Ksb(BaseModel):
       raise ValueError(f"{self.ksb_code} is not a valid ksb_code, choose a int from 1 to 25")
   
   def ksb_description_validator(self):
-    pass
+     if len(self.description) < 15 or len(self.description) > 300:
+      raise ValueError(f"description needs to be more than 15 characters and less than 300 characters in length")
+       
+       
   def save(self, **kwargs):
     self.ksb_type_validator()
     self.ksb_code_validator()
