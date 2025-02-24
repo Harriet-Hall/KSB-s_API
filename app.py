@@ -121,7 +121,13 @@ def update_ksb(uuid_str):
             
             
         if "ksb_code" in request_json:    
-            ksb_to_update.ksb_code = int(request_json["ksb_code"])
+            ksb_to_update.ksb_code = request_json["ksb_code"]
+            try:
+                ksb_to_update.ksb_code_validator()
+            except ValueError as value_error:
+                return jsonify({"error": str(value_error)}), 400
+            
+                
         if "description" in request_json:
             ksb_to_update.description = request_json["description"]
         ksb_to_update.save()  

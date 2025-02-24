@@ -141,7 +141,7 @@ def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
     response_data = json.loads(response.data)
     assert (
         response_data["error"]
-        == "100 is not a valid ksb_code, choose a number from 1 to 25"
+        == "100 is not a valid ksb_code, choose a int from 1 to 25"
     )
 
 
@@ -313,6 +313,8 @@ def test_update_ksb_with_invalid_uuid(mock_client, test_database):
     )
 
     assert len(Ksb.select()) == 4
+    
+    
 def test_update_ksb_with_invalid_ksb_type(mock_client, test_database):
     ksbs = Ksb.select()
     ksb_to_update = ksbs[0]
@@ -328,4 +330,23 @@ def test_update_ksb_with_invalid_ksb_type(mock_client, test_database):
     assert (
         response_data["error"]
         == "Ski1111 is not a valid ksb_type"
+    )
+    
+    
+def test_update_ksb_with_invalid_ksb_code(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[0]
+    assert ksb_to_update.ksb_code == 5
+    
+    data = {
+        "ksb_code": 2.2
+    }
+    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+    assert response.status_code == 400
+    response_data = json.loads(response.data)
+
+
+    assert (
+        response_data["error"]
+        == "2.2 is not a valid ksb_code, choose a int from 1 to 25"
     )
