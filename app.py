@@ -110,11 +110,13 @@ def update_ksb(uuid):
         
         ksb_to_update = Ksb.get(Ksb.id == uuid)
     
-        if ksb_to_update:
-          
-            ksb_to_update.ksb_type = request_json["ksb_type"].capitalize()
-            ksb_to_update.ksb_code = int(request_json["ksb_code"])
-            ksb_to_update.description = request_json["description"]
+        if ksb_to_update: 
+            if "ksb_type" in request_json:
+                ksb_to_update.ksb_type = request_json["ksb_type"].capitalize()
+            if "ksb_code" in request_json:    
+                ksb_to_update.ksb_code = int(request_json["ksb_code"])
+            if "description" in request_json:
+                ksb_to_update.description = request_json["description"]
             ksb_to_update.save()  
     
             updated_ksb = Ksb.get(Ksb.id == uuid)
