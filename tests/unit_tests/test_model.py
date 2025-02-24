@@ -56,6 +56,12 @@ def test_ksb_code_is_outside_range():
       ksb.ksb_code_validator()
       assert value_error.value == f"{ksb.ksb_code} is not a valid ksb_code, choose a int from 1 to 25"
   
+def test_ksb_code_is_not_int():
+   with pytest.raises(ValueError) as value_error:
+      ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c1132", ksb_type = "behaviour", ksb_code = 0.0, description = "Test description")
+      ksb.ksb_code_validator()
+      assert value_error.value == f"{ksb.ksb_code} is not a valid ksb_code, choose a int from 1 to 25"
+  
 def test_save_calls_ksb_code_validator():
     ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c10456", ksb_type = "behaviour", ksb_code = 3, description = "Test description")
     ksb.save()
