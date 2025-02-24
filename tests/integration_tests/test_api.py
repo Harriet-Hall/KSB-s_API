@@ -261,7 +261,31 @@ def test_update_ksb_code(mock_client, test_database):
     assert updated_ksb.ksb_type == "Knowledge"
     assert updated_ksb.ksb_code == 4
     
-
+def test_update_ksb_description(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[1]
+    assert ksb_to_update.ksb_type == "Knowledge"
+    assert ksb_to_update.ksb_code == 7
+    assert ksb_to_update.description == "General purpose programming and infrastructure-as-code."
+    
+    data = {
+        "description": "updated description",
+    }
+    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+    
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["description"] == "updated description"
+    
+    updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
+    
+    assert updated_ksb.ksb_type == "Knowledge"
+    assert updated_ksb.ksb_code == 7
+    assert updated_ksb.description == "updated description"
+    
+    
+    
+    
 def test_update_ksb_with_invalid_uuid(mock_client, test_database):
     
     data = {
