@@ -3,6 +3,7 @@ import json
 from flask import Flask, jsonify, request
 from database import Ksb
 from utils import check_for_duplicates, KSB_TYPE_CHOICES
+from peewee import DoesNotExist
 
 
 app = Flask(__name__)
@@ -73,9 +74,13 @@ def delete_ksb():
         if ksb:
             ksb.delete_instance()
             return jsonify({}), 204
-                    
-    except:
-        return jsonify({"error": "ksb does not exist"}), 404
+        
+    except DoesNotExist:
+            return jsonify({"error": "ksb cannot be deleted as it does not exist in database"}), 404
+            
+    except: 
+        pass
+       
 
             
 @app.get("/<ksb_type>")

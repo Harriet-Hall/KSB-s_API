@@ -155,8 +155,21 @@ def test_delete_ksb(mock_client, test_database):
     assert response.status_code == 204
     assert len(Ksb.select()) == 3
 
+
+def test_delete_ksb_with_valid_ksb_but_ksb_that_does_not_exist_in_database(mock_client, test_database):
+    data = {
+        "ksb_type": "skill",
+        "ksb_code": 10,
+    }
+    response = mock_client.delete("/", json=data)
+    assert response.status_code == 404
+    response_data = json.loads(response.data)
+    assert response_data["error"] == "ksb cannot be deleted as it does not exist in database"
+
+    assert len(Ksb.select()) == 4 
     
-def test_delete_ksb_with_that_does_not_exist(mock_client, test_database):
+    
+def test_delete_ksb_with_invalid_data_returns_an_error(mock_client, test_database):
     data = {
         "ksb_type": "invalid",
         "ksb_code": 9,
@@ -164,8 +177,7 @@ def test_delete_ksb_with_that_does_not_exist(mock_client, test_database):
     response = mock_client.delete("/", json=data)
     assert response.status_code == 404
     response_data = json.loads(response.data)
-    assert response_data["error"] == "ksb does not exist"
+    assert response_data["error"] == "ksb cannot be deleted as it does not exist in database"
 
     assert len(Ksb.select()) == 4
     
-      
