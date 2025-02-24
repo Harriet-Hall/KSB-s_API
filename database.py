@@ -23,7 +23,7 @@ class Ksb(BaseModel):
   id = UUIDField(primary_key=True)
   ksb_type = CharField(null=True)
   ksb_code = IntegerField(null=True)
-  description = CharField(max_length=255, unique=True, null=True)
+  description = CharField()
 
   def ksb_type_validator(self):
     if self.ksb_type not in KSB_TYPE_CHOICES:
@@ -32,7 +32,10 @@ class Ksb(BaseModel):
       self.ksb_type = self.ksb_type.capitalize()
       
   def ksb_code_validator(self):
-    if self.ksb_code < 1 or self.ksb_code > 50 or type(self.ksb_code) is not int:
+    if isinstance(self.ksb_code, int) and self.ksb_code > 0 or self.ksb_code <51:
+      return
+    else:
+    # if self.ksb_code < 1 or self.ksb_code > 50 or type(self.ksb_code) is not int:
       raise ValueError(f"{self.ksb_code} is not a valid ksb_code, choose a int from 1 to 25")
   
   def ksb_description_validator(self):
