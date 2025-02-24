@@ -8,10 +8,8 @@ from utils import check_for_duplicates, KSB_TYPE_CHOICES
 app = Flask(__name__)
 
 
-@app.route("/", methods=["GET", "POST", "DELETE"])
-def ksbs():
-
-    if request.method == "GET":
+@app.get("/")
+def get_ksbs():
 
         ksbs = Ksb.select()
 
@@ -25,8 +23,11 @@ def ksbs():
             for ksb in ksbs
         ]
         return jsonify(ksbs)
+    
+    
+@app.post("/")
+def post_ksb():
 
-    elif request.method == "POST":
         ksbs = Ksb.select()
         
         if check_for_duplicates(ksbs, request):
@@ -59,7 +60,9 @@ def ksbs():
             except ValueError as value_error:
                 return jsonify({"error": str(value_error)}), 400
 
-    elif request.method == "DELETE":
+
+@app.delete("/")
+def delete_ksb():
         
         try:
             request_json = json.loads(request.data)
@@ -73,12 +76,10 @@ def ksbs():
                         
         except:
             return jsonify({"error": "ksb does not exist"}), 404
-    else:
-        pass
+    
             
-     
-@app.route("/<ksb_type>")
-def ksb_by_type(ksb_type):
+@app.get("/<ksb_type>")
+def get_ksb_by_type(ksb_type):
 
     if ksb_type not in  KSB_TYPE_CHOICES:
         return "endpoint does not exist", 404
