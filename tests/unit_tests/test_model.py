@@ -14,7 +14,7 @@ def test_ksb_properties_have_correct_types():
   assert isinstance(ksb.description, str)
   
   
-def test_ksb_type_validator():
+def test_ksb_type_validator_with_valid_ksb_type():
   ksb_type_values = ['Knowledge', 'knowledge', 'Skill', 'skill', 'Behaviour', 'behaviour']
 
   for i, ksb_type_value in enumerate(ksb_type_values):
@@ -23,14 +23,14 @@ def test_ksb_type_validator():
     assert ksb.ksb_type == ksb_type_values[i].capitalize()
   
   
-def test_error_raised_if_ksb_type_is_invalid():
+def test_ksb_type_validator_returns_error_if_ksb_type_is_invalid():
     with pytest.raises(ValueError) as value_error:      
       ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c10123", ksb_type = "behave", ksb_code = 2, description = "Test description")
       ksb.ksb_type_validator()
       assert value_error.value == f"{ksb.ksb_type} is not a valid ksb_type"
     
   
-def test_ksb_type_first_letter_is_capitalised():
+def test_ksb_type_validator_returns_type_with_first_letter_is_capitalised():
     ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c10123", ksb_type = "skill", ksb_code = 2, description = "Test description")
     ksb.ksb_type_validator()
     assert ksb.ksb_type == "Skill"
@@ -40,12 +40,12 @@ def test_save_calls_ksb_type_validator():
     ksb.save()
     assert ksb.ksb_type == "Behaviour"
     
-def test_ksb_code_is_between_1_and_25():
+def test_ksb_code_validator_with_ksb_code_between_1_and_25():
     ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c10456", ksb_type = "behaviour", ksb_code = 3, description = "Test description")
     ksb.ksb_code_validator()
     assert ksb.ksb_code == 3
     
-def test_ksb_code_is_outside_range():
+def test_ksb_code_validator_raises_error_when_ksb_code_is_outside_range():
     with pytest.raises(ValueError) as value_error:
       ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c1132", ksb_type = "behaviour", ksb_code = 0, description = "Test description")
       ksb.ksb_code_validator()
@@ -56,7 +56,7 @@ def test_ksb_code_is_outside_range():
       ksb.ksb_code_validator()
       assert value_error.value == f"{ksb.ksb_code} is not a valid ksb_code, choose a int from 1 to 25"
   
-def test_ksb_code_is_not_int():
+def test_ksb_code_validator_raises_error_when_ksb_code_is_not_int():
    with pytest.raises(ValueError) as value_error:
       ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c1132", ksb_type = "behaviour", ksb_code = 0.0, description = "Test description")
       ksb.ksb_code_validator()
