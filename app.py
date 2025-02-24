@@ -64,7 +64,7 @@ def post_ksb():
 def delete_ksb(uuid_str):
         
     try:
-        uuid_obj = uuid.UUID(uuid_str) 
+        uuid_obj = uuid.UUID(uuid_str)
         ksb_to_delete = Ksb.get(Ksb.id == uuid_obj)
 
         if ksb_to_delete:
@@ -102,12 +102,14 @@ def get_ksb_by_type(ksb_type):
     except:
         pass
 
-@app.put("/<uuid>")
-def update_ksb(uuid):
+@app.put("/<uuid_str>")
+def update_ksb(uuid_str):
+    
     request_json = json.loads(request.data)
     try: 
         
-        ksb_to_update = Ksb.get(Ksb.id == uuid)
+        uuid_obj = uuid.UUID(uuid_str)
+        ksb_to_update = Ksb.get(Ksb.id == uuid_obj)
     
         if ksb_to_update: 
             if "ksb_type" in request_json:
@@ -118,7 +120,7 @@ def update_ksb(uuid):
                 ksb_to_update.description = request_json["description"]
             ksb_to_update.save()  
     
-            updated_ksb = Ksb.get(Ksb.id == uuid)
+            updated_ksb = Ksb.get(Ksb.id == uuid_obj)
             return jsonify(
                     {
                     "id": updated_ksb.id,
@@ -129,7 +131,9 @@ def update_ksb(uuid):
        
     except DoesNotExist:
         return jsonify({"error": "ksb with that uuid does not exist in database"}), 404
-            
+    except ValueError:
+        return jsonify({"error": "uuid is invalid"}), 404
+             
 
 if __name__ == "__main__":
     app.run(debug=True)
