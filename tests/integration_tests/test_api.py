@@ -235,14 +235,33 @@ def test_update_ksb_type(mock_client, test_database):
     
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert  "ksb_type", "Skill" in response_data
+    assert response_data["type"] == "Skill"
     
     updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
     
-    assert updated_ksb.ksb_type == data["ksb_type"]
+    assert updated_ksb.ksb_type == "Skill"
     assert updated_ksb.ksb_code == 5
     
+def test_update_ksb_code(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[0]
+    assert ksb_to_update.ksb_type == "Knowledge"
+    assert ksb_to_update.ksb_code == 5
+    data = {
+        "ksb_code": 4,
+    }
+    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
     
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["code"] == 4
+    
+    updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
+    
+    assert updated_ksb.ksb_type == "Knowledge"
+    assert updated_ksb.ksb_code == 4
+    
+
 def test_update_ksb_with_invalid_uuid(mock_client, test_database):
     
     data = {
