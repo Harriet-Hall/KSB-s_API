@@ -156,4 +156,16 @@ def test_delete_ksb(mock_client, test_database):
     assert len(Ksb.select()) == 3
 
     
+def test_delete_ksb_with_that_does_not_exist(mock_client, test_database):
+    data = {
+        "ksb_type": "invalid",
+        "ksb_code": 9,
+    }
+    response = mock_client.delete("/", json=data)
+    assert response.status_code == 404
+    response_data = json.loads(response.data)
+    assert response_data["error"] == "ksb does not exist"
+
+    assert len(Ksb.select()) == 4
     
+      

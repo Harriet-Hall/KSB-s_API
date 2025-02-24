@@ -7,9 +7,9 @@ from utils import check_for_duplicates, KSB_TYPE_CHOICES
 
 app = Flask(__name__)
 
-@app.errorhandler(404)
-def not_found(error):
-    return jsonify({'error': 'Not found'}), 404
+# @app.errorhandler(404)
+# def not_found(error):
+#     return jsonify({'error': 'Not found'}), 404
 
 @app.route("/", methods=["GET", "POST", "DELETE"])
 def ksbs():
@@ -76,11 +76,10 @@ def ksbs():
             )
             if ksb:
                 ksb.delete_instance()
-                response = jsonify({})
-                response.status_code = 204
-                return response
+                return jsonify({}), 204
+                        
         except:
-            pass
+            return jsonify({"error": "ksb does not exist"}), 404
     else:
         pass
             
