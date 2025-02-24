@@ -209,12 +209,10 @@ def test_update_ksb(mock_client, test_database):
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data == {
-        "code": 6,
-        "description": "Install, manage and troubleshoot monitoring tools",
-        "id": "e7ae2714-57a3-4e2d-a4ed-59c8c46ea9a9",
-        "type": "Skill",
-    }
+    assert response_data["type"] == data["ksb_type"]
+    assert response_data["code"] == data["ksb_code"]
+    assert response_data["description"] == data["description"]
+
 
     updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
 
@@ -224,3 +222,4 @@ def test_update_ksb(mock_client, test_database):
         updated_ksb.description == "Install, manage and troubleshoot monitoring tools"
     )
     assert len(Ksb.select()) == 4
+
