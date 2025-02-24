@@ -1,3 +1,5 @@
+from base64 import decode
+import json
 from flask import Flask, jsonify, request
 from database import Ksb
 from utils import check_for_duplicates, KSB_TYPE_CHOICES
@@ -9,7 +11,7 @@ app = Flask(__name__)
 def not_found(error):
     return jsonify({'error': 'Not found'}), 404
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST", "DELETE"])
 def ksbs():
 
     if request.method == "GET":
@@ -64,9 +66,25 @@ def ksbs():
                 response.status_code = 400
                 return response
 
-      
-
-
+    elif request.method == "DELETE":
+        
+        try:
+            request_json = json.loads(request.data)
+            ksb = Ksb.get(
+            Ksb.ksb_code == request_json["ksb_code"],
+            Ksb.ksb_type == request_json["ksb_type"].capitalize()
+            )
+            if ksb:
+                ksb.delete_instance()
+                response = jsonify({})
+                response.status_code = 204
+                return response
+        except:
+            pass
+    else:
+        pass
+            
+     
 @app.route("/<ksb_type>")
 def ksb_by_type(ksb_type):
 

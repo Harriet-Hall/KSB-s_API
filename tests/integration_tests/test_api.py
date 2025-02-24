@@ -131,7 +131,6 @@ def test_post_ksb_with_invalid_ksb_type(mock_client, test_database):
     response = mock_client.post("/", json=data)
     assert response.status_code == 400
     response_data = json.loads(response.data)
-    print(response_data)
     assert response_data["error"] == "invalid is not a valid ksb_type"
     
     
@@ -144,10 +143,17 @@ def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
     response = mock_client.post("/", json=data)
     assert response.status_code == 400
     response_data = json.loads(response.data)
-    print(response_data)
     assert response_data["error"] == "100 is not a valid ksb_code, choose a number from 1 to 25"
     
     
+def test_delete_ksb(mock_client, test_database):
+    data = {
+        "ksb_type": "skill",
+        "ksb_code": 9,
+    }
+    response = mock_client.delete("/", json=data)
+    assert response.status_code == 204
+    assert len(Ksb.select()) == 3
 
-
+    
     
