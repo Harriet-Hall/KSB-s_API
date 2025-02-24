@@ -1,5 +1,6 @@
 from peewee import *
 import os 
+from utils import KSB_TYPE_CHOICES
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,18 +19,14 @@ class BaseModel(Model):
     database = psql_db
 
 class Ksb(BaseModel):
-  KSB_TYPE_CHOICES = [
-    'Knowledge', 'knowledge',
-    'Skill', 'skill',
-    'Behaviour', 'behaviour'
-        ]
+
   id = UUIDField(primary_key=True)
   ksb_type = CharField()
   ksb_code = IntegerField()
   description = TextField()
 
   def ksb_type_validator(self):
-    if self.ksb_type not in self.KSB_TYPE_CHOICES:
+    if self.ksb_type not in KSB_TYPE_CHOICES:
       raise ValueError(f"{self.ksb_type} is not a valid ksb_type")
     else:
       self.ksb_type = self.ksb_type.capitalize()

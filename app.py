@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from database import Ksb
-from utils import check_for_duplicates
+from utils import check_for_duplicates, KSB_TYPE_CHOICES
+
 
 app = Flask(__name__)
 
@@ -68,11 +69,7 @@ def ksbs():
 
 @app.route("/<ksb_type>")
 def ksb_by_type(ksb_type):
-    KSB_TYPE_CHOICES = [
-    'Knowledge', 'knowledge',
-    'Skill', 'skill',
-    'Behaviour', 'behaviour'
-        ]
+
     if ksb_type not in  KSB_TYPE_CHOICES:
         return "endpoint does not exist", 404
         
