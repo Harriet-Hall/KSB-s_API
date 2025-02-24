@@ -1,3 +1,4 @@
+from base64 import decode
 from app import app
 import json
 from database import Ksb
@@ -86,6 +87,15 @@ def test_get_request_to_behaviour_endpoint_returns_list_of_behaviour_ksbs(
         assert ksb["type"] == "Behaviour"
 
 
+def test_get_request_to_invalid_endpoint_returns_error(
+    mock_client, test_database
+):
+        response = mock_client.get("/behavir")
+        assert response.status_code == 404 
+        response_data = response.data.decode("utf-8")
+        assert response_data == "endpoint does not exist"
+
+
 def test_post_a_ksb_to_home_endpoint(mock_client, test_database):
     data = {
         "ksb_type": "Knowledge",
@@ -138,4 +148,6 @@ def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
     assert response_data["error"] == "100 is not a valid ksb_code, choose a number from 1 to 25"
     
     
+
+
     

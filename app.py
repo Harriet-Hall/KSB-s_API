@@ -4,6 +4,9 @@ from utils import check_for_duplicates
 
 app = Flask(__name__)
 
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Not found'}), 404
 
 @app.route("/", methods=["GET", "POST"])
 def ksbs():
@@ -65,7 +68,15 @@ def ksbs():
 
 @app.route("/<ksb_type>")
 def ksb_by_type(ksb_type):
-
+    KSB_TYPE_CHOICES = [
+    'Knowledge', 'knowledge',
+    'Skill', 'skill',
+    'Behaviour', 'behaviour'
+        ]
+    if ksb_type not in  KSB_TYPE_CHOICES:
+        return "endpoint does not exist", 404
+        
+        
     filtered_list = Ksb.select().where(Ksb.ksb_type == ksb_type.capitalize())
 
     ksb_list = [
