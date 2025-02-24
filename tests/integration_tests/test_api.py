@@ -92,8 +92,8 @@ def test_get_request_to_invalid_endpoint_returns_error(
 ):
         response = mock_client.get("/behavir")
         assert response.status_code == 404 
-        response_data = response.data.decode("utf-8")
-        assert response_data == "endpoint does not exist"
+        response_data = json.loads(response.data)
+        assert response_data["error"] == "endpoint does not exist"
 
 
 def test_post_a_ksb_to_home_endpoint(mock_client, test_database):
