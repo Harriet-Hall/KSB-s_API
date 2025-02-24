@@ -1,6 +1,5 @@
-from base64 import decode
 import json
-from flask import Flask, abort, jsonify, request
+from flask import Flask, jsonify, request
 from database import Ksb
 from utils import check_for_duplicates, KSB_TYPE_CHOICES
 from peewee import DoesNotExist
@@ -106,28 +105,35 @@ def get_ksb_by_type(ksb_type):
 def update_ksb(uuid_str):
     
     request_json = json.loads(request.data)
+    
+ 
     try: 
         
         uuid_obj = uuid.UUID(uuid_str)
         ksb_to_update = Ksb.get(Ksb.id == uuid_obj)
-    
-        if ksb_to_update: 
-            if "ksb_type" in request_json:
-                ksb_to_update.ksb_type = request_json["ksb_type"].capitalize()
-            if "ksb_code" in request_json:    
-                ksb_to_update.ksb_code = int(request_json["ksb_code"])
-            if "description" in request_json:
-                ksb_to_update.description = request_json["description"]
-            ksb_to_update.save()  
-    
-            updated_ksb = Ksb.get(Ksb.id == uuid_obj)
-            return jsonify(
-                    {
-                    "id": updated_ksb.id,
-                    "type": updated_ksb.ksb_type,
-                    "code": updated_ksb.ksb_code,
-                    "description": updated_ksb.description,
-                }), 200
+     
+        if "ksb_type" in request_json:
+            ksb_to_update.ksb_type = request_json["ksb_type"].capitalize()
+            try:
+                ksb_to_update.ksb_type_validator()
+            except ValueError as value_error:
+                return jsonify({"error": str(value_error)}), 400
+            
+            
+        if "ksb_code" in request_json:    
+            ksb_to_update.ksb_code = int(request_json["ksb_code"])
+        if "description" in request_json:
+            ksb_to_update.description = request_json["description"]
+        ksb_to_update.save()  
+
+        updated_ksb = Ksb.get(Ksb.id == uuid_obj)
+        return jsonify(
+                {
+                "id": updated_ksb.id,
+                "type": updated_ksb.ksb_type,
+                "code": updated_ksb.ksb_code,
+                "description": updated_ksb.description,
+            }), 200
        
     except DoesNotExist:
         return jsonify({"error": "ksb with that uuid does not exist in database"}), 404

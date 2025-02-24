@@ -315,11 +315,11 @@ def test_update_ksb_with_invalid_uuid(mock_client, test_database):
     assert len(Ksb.select()) == 4
 def test_update_ksb_with_invalid_ksb_type(mock_client, test_database):
     ksbs = Ksb.select()
-    ksb_to_update = ksbs[1]
+    ksb_to_update = ksbs[0]
     assert ksb_to_update.ksb_type == "Knowledge"
     
     data = {
-        "ksb_type": "Knowge"
+        "ksb_type": "ski1111"
     }
     response = mock_client.put(f"/{ksb_to_update.id}", json=data)
     assert response.status_code == 400
@@ -327,5 +327,5 @@ def test_update_ksb_with_invalid_ksb_type(mock_client, test_database):
 
     assert (
         response_data["error"]
-        == "Knowge is not a valid ksb_type"
+        == "Ski1111 is not a valid ksb_type"
     )
