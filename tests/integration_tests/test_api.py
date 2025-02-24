@@ -285,9 +285,9 @@ def test_update_ksb_description(mock_client, test_database):
     assert updated_ksb.ksb_type == "Knowledge"
     assert updated_ksb.ksb_code == 7
     assert updated_ksb.description == "updated description"
+        
     
-    
-def test_update_ksb_with_invalid_uuid(mock_client, test_database):
+def test_update_ksb_with_valid_uuid_but_ksb_does_not_exist_in_database(mock_client, test_database):
     
     data = {
         "ksb_type": "Skill",
@@ -297,6 +297,22 @@ def test_update_ksb_with_invalid_uuid(mock_client, test_database):
     response = mock_client.put(f"/acde070d-8c4c-4f0d-9d8a-162843c10333", json=data)
     assert response.status_code == 404
     
+def test_update_ksb_with_invalid_uuid(mock_client, test_database):
+    
+    data = {
+        "ksb_type": "Skill",
+        "ksb_code": 6,
+        "description": "Install, manage and troubleshoot monitoring tools",
+    }
+    response = mock_client.put(f"/123", json=data)
+    assert response.status_code == 404
+    response_data = json.loads(response.data)
+    assert (
+        response_data["error"]
+        == "uuid is invalid"
+    )
+
+    assert len(Ksb.select()) == 4
 def test_update_ksb_with_invalid_ksb_type(mock_client, test_database):
     ksbs = Ksb.select()
     ksb_to_update = ksbs[1]
