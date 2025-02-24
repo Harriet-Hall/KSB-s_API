@@ -67,3 +67,8 @@ def test_save_calls_ksb_code_validator():
     ksb.save()
     assert ksb.ksb_type == "Behaviour"
     
+def test_ksb_description_validator_with_valid_ksb_description():
+    ksb = Ksb(id = "acde070d-8c4c-4f0d-9d8a-162843c10456", ksb_type = "behaviour", ksb_code = 3, description = "Test description")
+    ksb.ksb_description_validator()
+    assert ksb.description == "Test description"    
+    
