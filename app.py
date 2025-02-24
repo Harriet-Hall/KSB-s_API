@@ -105,7 +105,6 @@ def get_ksb_by_type(ksb_type):
 
 @app.put("/<uuid>")
 def update_ksb(uuid):
-    
     request_json = json.loads(request.data)
     try: 
         
@@ -116,19 +115,20 @@ def update_ksb(uuid):
             ksb_to_update.ksb_type = request_json["ksb_type"].capitalize()
             ksb_to_update.ksb_code = int(request_json["ksb_code"])
             ksb_to_update.description = request_json["description"]
-        ksb_to_update.save()  
-   
-        updated_ksb = Ksb.get(Ksb.id == uuid)
-        return jsonify(
-                {
+            ksb_to_update.save()  
+    
+            updated_ksb = Ksb.get(Ksb.id == uuid)
+            return jsonify(
+                    {
                     "id": updated_ksb.id,
                     "type": updated_ksb.ksb_type,
                     "code": updated_ksb.ksb_code,
                     "description": updated_ksb.description,
                 }), 200
-
-    except:
-        pass
+       
+    except DoesNotExist:
+        return jsonify({"error": "ksb with that uuid does not exist in database"}), 404
+            
 
 if __name__ == "__main__":
     app.run(debug=True)

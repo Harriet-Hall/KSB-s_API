@@ -223,3 +223,12 @@ def test_update_ksb(mock_client, test_database):
     )
     assert len(Ksb.select()) == 4
 
+
+def test_update_ksb_with_invalid_uuid(mock_client, test_database):
+    data = {
+        "ksb_type": "Skill",
+        "ksb_code": 6,
+        "description": "Install, manage and troubleshoot monitoring tools",
+    }
+    response = mock_client.put(f"/acde070d-8c4c-4f0d-9d8a-162843c10333", json=data)
+    assert response.status_code == 404
