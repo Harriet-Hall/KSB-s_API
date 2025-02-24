@@ -1,6 +1,6 @@
 from base64 import decode
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, abort, jsonify, request
 from database import Ksb
 from utils import check_for_duplicates, KSB_TYPE_CHOICES
 from peewee import DoesNotExist
@@ -47,17 +47,15 @@ def post_ksb():
 
             
             ksb = new_ksb[0]
-            response = jsonify(
+            return jsonify(
                 {
                     "id": ksb.id,
                     "type": ksb.ksb_type,
                     "code": ksb.ksb_code,
                     "description": ksb.description,
                 }
-            )
+            ), 201
 
-            response.status_code = 201
-            return response
         except ValueError as value_error:
             return jsonify({"error": str(value_error)}), 400
 
@@ -101,7 +99,34 @@ def get_ksb_by_type(ksb_type):
             }
             for ksb in filtered_list
         ]
-        return jsonify(ksb_list)
+        return jsonify(ksb_list), 200
+    except:
+        pass
+
+@app.put("/<uuid>")
+def update_ksb(uuid):
+    
+    request_json = json.loads(request.data)
+    try: 
+        
+        ksb_to_update = Ksb.get(Ksb.id == uuid)
+    
+        if ksb_to_update:
+          
+            ksb_to_update.ksb_type = request_json["ksb_type"].capitalize()
+            ksb_to_update.ksb_code = int(request_json["ksb_code"])
+            ksb_to_update.description = request_json["description"]
+        ksb_to_update.save()  
+   
+        updated_ksb = Ksb.get(Ksb.id == uuid)
+        return jsonify(
+                {
+                    "id": updated_ksb.id,
+                    "type": updated_ksb.ksb_type,
+                    "code": updated_ksb.ksb_code,
+                    "description": updated_ksb.description,
+                }), 200
+
     except:
         pass
 
