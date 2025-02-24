@@ -43,5 +43,6 @@ class Ksb(BaseModel):
   def save(self, **kwargs):
     self.ksb_type_validator()
     self.ksb_code_validator()
+    self.ksb_description_validator()
     
     super(Ksb, self).save(**kwargs)

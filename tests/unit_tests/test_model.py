@@ -179,3 +179,13 @@ def test_ksb_description_validator_raises_error_escription_has_valid_length():
             value_error.value
             == "Tdescription needs to be more than 15 characters and less than 300 characters in length"
         )
+
+def test_save_calls_ksb_description_validator():
+    ksb = Ksb(
+        id="acde070d-8c4c-4f0d-9d8a-162843c10456",
+        ksb_type="behaviour",
+        ksb_code=3,
+        description="Test description",
+    )
+    ksb.save()
+    assert ksb.description == "Test description"
