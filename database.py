@@ -32,8 +32,8 @@ class Ksb(BaseModel):
       self.ksb_type = self.ksb_type.capitalize()
       
   def ksb_code_validator(self):
-    if self.ksb_code < 1 or self.ksb_code > 25:
-      raise ValueError(f"{self.ksb_code} is not a valid ksb_code, choose a number from 1 to 25")
+    if self.ksb_code < 1 or self.ksb_code > 50 or type(self.ksb_code) is not int:
+      raise ValueError(f"{self.ksb_code} is not a valid ksb_code, choose a int from 1 to 25")
        
   def save(self, **kwargs):
     self.ksb_type_validator()
