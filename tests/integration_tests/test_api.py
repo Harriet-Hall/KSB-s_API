@@ -146,23 +146,19 @@ def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
 
 
 def test_delete_ksb(mock_client, test_database):
-    data = {
-        "ksb_type": "skill",
-        "ksb_code": 9,
-    }
-    response = mock_client.delete("/", json=data)
+    ksbs = Ksb.select()
+    ksb_to_delete = ksbs[0]
+
+    response = mock_client.delete(f"/{ksb_to_delete.id}")
     assert response.status_code == 204
     assert len(Ksb.select()) == 3
 
 
-def test_delete_ksb_with_valid_ksb_but_ksb_that_does_not_exist_in_database(
+def test_delete_ksb_that_does_not_exist_in_database(
     mock_client, test_database
 ):
-    data = {
-        "ksb_type": "skill",
-        "ksb_code": 10,
-    }
-    response = mock_client.delete("/", json=data)
+
+    response = mock_client.delete(f"/acde070d-8c4c-4f0d-9d8a-162843c10333")
     assert response.status_code == 404
     response_data = json.loads(response.data)
     assert (
@@ -174,19 +170,17 @@ def test_delete_ksb_with_valid_ksb_but_ksb_that_does_not_exist_in_database(
 
 
 def test_delete_ksb_with_invalid_data_returns_an_error(mock_client, test_database):
-    data = {
-        "ksb_type": "invalid",
-        "ksb_code": 9,
-    }
-    response = mock_client.delete("/", json=data)
+  
+    response = mock_client.delete(f"/123")
     assert response.status_code == 404
     response_data = json.loads(response.data)
     assert (
         response_data["error"]
-        == "ksb cannot be deleted as it does not exist in database"
+        == "uuid is invalid"
     )
 
     assert len(Ksb.select()) == 4
+
 
 
 def test_update_ksb(mock_client, test_database):
@@ -228,6 +222,9 @@ def test_update_ksb_type(mock_client, test_database):
     ksb_to_update = ksbs[0]
     assert ksb_to_update.ksb_type == "Knowledge"
     assert ksb_to_update.ksb_code == 5
+    assert ksb_to_update.description == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
+    
+    
     data = {
         "ksb_type": "Skill",
     }
@@ -241,12 +238,16 @@ def test_update_ksb_type(mock_client, test_database):
     
     assert updated_ksb.ksb_type == "Skill"
     assert updated_ksb.ksb_code == 5
+    assert updated_ksb.description == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
+    
     
 def test_update_ksb_code(mock_client, test_database):
     ksbs = Ksb.select()
     ksb_to_update = ksbs[0]
     assert ksb_to_update.ksb_type == "Knowledge"
     assert ksb_to_update.ksb_code == 5
+    assert ksb_to_update.description == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
+    
     data = {
         "ksb_code": 4,
     }
@@ -260,6 +261,8 @@ def test_update_ksb_code(mock_client, test_database):
     
     assert updated_ksb.ksb_type == "Knowledge"
     assert updated_ksb.ksb_code == 4
+    assert updated_ksb.description == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
+    
     
 def test_update_ksb_description(mock_client, test_database):
     ksbs = Ksb.select()
@@ -284,8 +287,6 @@ def test_update_ksb_description(mock_client, test_database):
     assert updated_ksb.description == "updated description"
     
     
-    
-    
 def test_update_ksb_with_invalid_uuid(mock_client, test_database):
     
     data = {
@@ -295,3 +296,20 @@ def test_update_ksb_with_invalid_uuid(mock_client, test_database):
     }
     response = mock_client.put(f"/acde070d-8c4c-4f0d-9d8a-162843c10333", json=data)
     assert response.status_code == 404
+    
+def test_update_ksb_with_invalid_ksb_type(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[1]
+    assert ksb_to_update.ksb_type == "Knowledge"
+    
+    data = {
+        "ksb_type": "Knowge"
+    }
+    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+    assert response.status_code == 400
+    response_data = json.loads(response.data)
+
+    assert (
+        response_data["error"]
+        == "Knowge is not a valid ksb_type"
+    )

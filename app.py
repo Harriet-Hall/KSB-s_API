@@ -4,7 +4,7 @@ from flask import Flask, abort, jsonify, request
 from database import Ksb
 from utils import check_for_duplicates, KSB_TYPE_CHOICES
 from peewee import DoesNotExist
-
+import uuid
 
 app = Flask(__name__)
 
@@ -60,24 +60,23 @@ def post_ksb():
             return jsonify({"error": str(value_error)}), 400
 
 
-@app.delete("/")
-def delete_ksb():
+@app.delete("/<uuid_str>")
+def delete_ksb(uuid_str):
         
     try:
-        request_json = json.loads(request.data)
-        ksb = Ksb.get(
-        Ksb.ksb_code == request_json["ksb_code"],
-        Ksb.ksb_type == request_json["ksb_type"].capitalize()
-        )
-        if ksb:
-            ksb.delete_instance()
+        uuid_obj = uuid.UUID(uuid_str) 
+        ksb_to_delete = Ksb.get(Ksb.id == uuid_obj)
+
+        if ksb_to_delete:
+            ksb_to_delete.delete_instance()
             return jsonify({}), 204
         
     except DoesNotExist:
             return jsonify({"error": "ksb cannot be deleted as it does not exist in database"}), 404
-            
-    except: 
-        pass
+    
+    except ValueError:
+        return jsonify({"error": "uuid is invalid"}), 404
+        
        
 
             
