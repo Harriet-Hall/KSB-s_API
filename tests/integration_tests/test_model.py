@@ -35,7 +35,7 @@ def test_create_ksb_entry(test_database):
     Ksb.create(
         ksb_type= "Knowledge",
         ksb_code= 1,
-        description="Test description",
+        description="Test description"
     )
     
     rows = Ksb.select()
@@ -55,7 +55,7 @@ def test_create_ksb_entry_with_valid_ksb_types(test_database):
         Ksb.create(
         ksb_type=f"{ksb_type_value}",
         ksb_code= 1,
-        description="Test description",
+        description="Test description"
         )
     rows = Ksb.select()
 
@@ -70,7 +70,7 @@ def test_ksb_types_first_letter_is_capitalised(test_database):
     Ksb.create(
     ksb_type= "knowledge",
     ksb_code= 1,
-    description="Test description",
+    description="Test description"
 )
 
     rows = Ksb.select()
@@ -81,9 +81,31 @@ def test_error_raised_when_ksb_type_is_invalid(test_database):
         Ksb.create(
         ksb_type= "ski1111",
         ksb_code= 1,
-        description="Test description",
+        description="Test description"
     )
         assert value_error.value == "ski1111 is not a valid ksb_type"
         
 
-    
+def test_create_ksb_entry_with_valid_ksb_code(test_database):
+        Ksb.create(
+        ksb_type="knowledge",
+        ksb_code= 1,
+        description="Test description",
+        )
+        row = Ksb.select()
+        assert row[4].ksb_code == 1
+
+def test_create_ksb_entry_with_invalid_ksb_code(test_database):
+    with pytest.raises(ValueError) as value_error:
+
+        invalid_codes = ["3", 788, 7,3]
+        for code in invalid_codes:
+            
+            Ksb.create(
+            ksb_type="knowledge",
+            ksb_code=code,
+            description="Test description"
+            )
+        
+        assert value_error.value == f"{code} is not a valid ksb_code, choose an integer from 1 to 50"    
+
