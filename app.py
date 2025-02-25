@@ -12,20 +12,21 @@ app = Flask(__name__)
 
 @app.get("/")
 def get_ksbs():
-
-    ksbs = Ksb.select()
-
-    ksbs = [
-        {
-            "id": ksb.id,
-            "type": ksb.ksb_type,
-            "code": ksb.ksb_code,
-            "description": ksb.description,
-        }
-        for ksb in ksbs
-    ]
-    return jsonify(ksbs)
-
+    try:
+        ksbs = Ksb.select()
+        ksbs = [
+            {
+                "id": ksb.id,
+                "type": ksb.ksb_type,
+                "code": ksb.ksb_code,
+                "description": ksb.description,
+            }
+            for ksb in ksbs
+        ]
+        return jsonify(ksbs)
+    
+    except Exception:
+        return jsonify({"error": "Internal Server Error"}), 500
 
 @app.post("/")
 def post_ksb():
@@ -59,7 +60,8 @@ def post_ksb():
 
         except ValueError as value_error:
             return jsonify({"error": str(value_error)}), 400
-
+        except Exception:
+            return jsonify({"error": "Internal Server Error"}), 500
 
 @app.delete("/<uuid_str>")
 def delete_ksb(uuid_str):
@@ -99,8 +101,9 @@ def get_ksb_by_type(ksb_type):
             for ksb in filtered_list
         ]
         return jsonify(ksb_list), 200
-    except:
-        pass
+    
+    except Exception:
+        return jsonify({"error": "Internal Server Error"}), 500
 
 @app.put("/<uuid_str>")
 def update_ksb(uuid_str):
@@ -157,8 +160,9 @@ def update_ksb(uuid_str):
     except DoesNotExist:
         return jsonify({"error": "ksb with that uuid does not exist in database"}), 404
     except ValueError:
-        return jsonify({"error": "uuid is invalid"}), 404
-             
+        return jsonify({"error": "uuid is invalid"}), 404   
+    except Exception:
+        return jsonify({"error": "Internal Server Error"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
