@@ -154,9 +154,7 @@ def test_delete_ksb(mock_client, test_database):
     assert len(Ksb.select()) == 3
 
 
-def test_delete_ksb_that_does_not_exist_in_database(
-    mock_client, test_database
-):
+def test_delete_ksb_that_does_not_exist_in_database(mock_client, test_database):
 
     response = mock_client.delete(f"/acde070d-8c4c-4f0d-9d8a-162843c10333")
     assert response.status_code == 404
@@ -170,17 +168,13 @@ def test_delete_ksb_that_does_not_exist_in_database(
 
 
 def test_delete_ksb_with_invalid_data_returns_an_error(mock_client, test_database):
-  
+
     response = mock_client.delete(f"/123")
     assert response.status_code == 404
     response_data = json.loads(response.data)
-    assert (
-        response_data["error"]
-        == "uuid is invalid"
-    )
+    assert response_data["error"] == "uuid is invalid"
 
     assert len(Ksb.select()) == 4
-
 
 
 def test_update_ksb(mock_client, test_database):
@@ -207,7 +201,6 @@ def test_update_ksb(mock_client, test_database):
     assert response_data["code"] == data["ksb_code"]
     assert response_data["description"] == data["description"]
 
-
     updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
 
     assert updated_ksb.ksb_type == "Skill"
@@ -217,78 +210,11 @@ def test_update_ksb(mock_client, test_database):
     )
     assert len(Ksb.select()) == 4
 
-def test_update_ksb_type(mock_client, test_database):
-    ksbs = Ksb.select()
-    ksb_to_update = ksbs[0]
-    assert ksb_to_update.ksb_type == "Knowledge"
-    assert ksb_to_update.ksb_code == 5
-    assert ksb_to_update.description == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
-    
-    
-    data = {
-        "ksb_type": "Skill",
-    }
-    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
-    
-    assert response.status_code == 200
-    response_data = json.loads(response.data)
-    assert response_data["type"] == "Skill"
-    
-    updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
-    
-    assert updated_ksb.ksb_type == "Skill"
-    assert updated_ksb.ksb_code == 5
-    assert updated_ksb.description == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
-    
-    
-def test_update_ksb_code(mock_client, test_database):
-    ksbs = Ksb.select()
-    ksb_to_update = ksbs[0]
-    assert ksb_to_update.ksb_type == "Knowledge"
-    assert ksb_to_update.ksb_code == 5
-    assert ksb_to_update.description == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
-    
-    data = {
-        "ksb_code": 4,
-    }
-    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
-    
-    assert response.status_code == 200
-    response_data = json.loads(response.data)
-    assert response_data["code"] == 4
-    
-    updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
-    
-    assert updated_ksb.ksb_type == "Knowledge"
-    assert updated_ksb.ksb_code == 4
-    assert updated_ksb.description == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
-    
-    
-def test_update_ksb_description(mock_client, test_database):
-    ksbs = Ksb.select()
-    ksb_to_update = ksbs[1]
-    assert ksb_to_update.ksb_type == "Knowledge"
-    assert ksb_to_update.ksb_code == 7
-    assert ksb_to_update.description == "General purpose programming and infrastructure-as-code."
-    
-    data = {
-        "description": "updated description",
-    }
-    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
-    
-    assert response.status_code == 200
-    response_data = json.loads(response.data)
-    assert response_data["description"] == "updated description"
-    
-    updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
-    
-    assert updated_ksb.ksb_type == "Knowledge"
-    assert updated_ksb.ksb_code == 7
-    assert updated_ksb.description == "updated description"
-        
-    
-def test_update_ksb_with_valid_uuid_but_ksb_does_not_exist_in_database(mock_client, test_database):
-    
+
+def test_update_ksb_with_valid_uuid_but_ksb_does_not_exist_in_database(
+    mock_client, test_database
+):
+
     data = {
         "ksb_type": "Skill",
         "ksb_code": 6,
@@ -297,8 +223,10 @@ def test_update_ksb_with_valid_uuid_but_ksb_does_not_exist_in_database(mock_clie
     response = mock_client.put(f"/acde070d-8c4c-4f0d-9d8a-162843c10333", json=data)
     assert response.status_code == 404
     
+
+
 def test_update_ksb_with_invalid_uuid(mock_client, test_database):
-    
+
     data = {
         "ksb_type": "Skill",
         "ksb_code": 6,
@@ -307,46 +235,116 @@ def test_update_ksb_with_invalid_uuid(mock_client, test_database):
     response = mock_client.put(f"/123", json=data)
     assert response.status_code == 404
     response_data = json.loads(response.data)
-    assert (
-        response_data["error"]
-        == "uuid is invalid"
-    )
+    assert response_data["error"] == "uuid is invalid"
 
     assert len(Ksb.select()) == 4
-    
+
+
+def test_update_ksb_type(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[0]
+    assert ksb_to_update.ksb_type == "Knowledge"
+    assert ksb_to_update.ksb_code == 5
+    assert (
+        ksb_to_update.description
+        == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
+    )
+
+    data = {
+        "ksb_type": "Skill",
+    }
+    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["type"] == "Skill"
+
+    updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
+
+    assert updated_ksb.ksb_type == "Skill"
+    assert updated_ksb.ksb_code == 5
+    assert (
+        updated_ksb.description
+        == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
+    )
     
 def test_update_ksb_with_invalid_ksb_type(mock_client, test_database):
     ksbs = Ksb.select()
     ksb_to_update = ksbs[0]
     assert ksb_to_update.ksb_type == "Knowledge"
-    
-    data = {
-        "ksb_type": "ski1111"
-    }
+
+    data = {"ksb_type": "ski1111"}
     response = mock_client.put(f"/{ksb_to_update.id}", json=data)
     assert response.status_code == 400
     response_data = json.loads(response.data)
 
+    assert response_data["error"] == "Ski1111 is not a valid ksb_type"
+    
+    
+def test_update_ksb_code(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[0]
+    assert ksb_to_update.ksb_type == "Knowledge"
+    assert ksb_to_update.ksb_code == 5
     assert (
-        response_data["error"]
-        == "Ski1111 is not a valid ksb_type"
+        ksb_to_update.description
+        == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
     )
-    
-    
+
+    data = {
+        "ksb_code": 4,
+    }
+    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["code"] == 4
+
+    updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
+
+    assert updated_ksb.ksb_type == "Knowledge"
+    assert updated_ksb.ksb_code == 4
+    assert (
+        updated_ksb.description
+        == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
+    )
+
+
 def test_update_ksb_with_invalid_ksb_code(mock_client, test_database):
     ksbs = Ksb.select()
     ksb_to_update = ksbs[0]
     assert ksb_to_update.ksb_code == 5
-    
-    data = {
-        "ksb_code": 2.2
-    }
+
+    data = {"ksb_code": 2.2}
     response = mock_client.put(f"/{ksb_to_update.id}", json=data)
     assert response.status_code == 400
     response_data = json.loads(response.data)
 
+    assert response_data["error"] == "2.2 is of type: float, it needs to be an integer"
 
+
+def test_update_ksb_description(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[1]
+    assert ksb_to_update.ksb_type == "Knowledge"
+    assert ksb_to_update.ksb_code == 7
     assert (
-        response_data["error"]
-        == "2.2 is of type: float, it needs to be an integer"
+        ksb_to_update.description
+        == "General purpose programming and infrastructure-as-code."
     )
+
+    data = {
+        "description": "updated description",
+    }
+    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["description"] == "updated description"
+
+    updated_ksb = Ksb.get(Ksb.id == ksb_to_update.id)
+
+    assert updated_ksb.ksb_type == "Knowledge"
+    assert updated_ksb.ksb_code == 7
+    assert updated_ksb.description == "updated description"
+
