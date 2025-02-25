@@ -66,13 +66,18 @@ def test_create_ksb_entry_with_valid_ksb_types(test_database):
 
     
 def test_error_raised_when_ksb_type_is_invalid(test_database):
+    
     with pytest.raises(ValueError) as value_error:
-        Ksb.create(
-        ksb_type= "ski1111",
-        ksb_code= 1,
-        description="Test description"
-    )
-    assert str(value_error.value) == "ski1111 is not a valid ksb_type"
+        invalid_types = ["", 123, "ski1111"]
+        for type in invalid_types:
+            
+            Ksb.create(
+            ksb_type=type,
+            ksb_code= 1,
+            description="Test description"
+             )
+            
+    assert str(value_error.value) == f"{type} is not a valid ksb_type"
         
 
 def test_create_ksb_entry_with_valid_ksb_code(test_database):
