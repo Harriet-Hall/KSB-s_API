@@ -348,5 +348,5 @@ def test_update_ksb_with_invalid_ksb_code(mock_client, test_database):
 
     assert (
         response_data["error"]
-        == "2.2 is not a valid ksb_code, choose a int from 1 to 25"
+        == "2.2 is not a valid ksb_code, choose an int from 1 to 50"
     )

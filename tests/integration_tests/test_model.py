@@ -83,7 +83,7 @@ def test_error_raised_when_ksb_type_is_invalid(test_database):
         ksb_code= 1,
         description="Test description"
     )
-        assert value_error.value == "ski1111 is not a valid ksb_type"
+    assert str(value_error.value) == "ski1111 is not a valid ksb_type"
         
 
 def test_create_ksb_entry_with_valid_ksb_code(test_database):
@@ -107,7 +107,7 @@ def test_create_ksb_entry_with_invalid_ksb_code(test_database):
             description="Test description"
             )
         
-        assert value_error.value == f"{code} is not a valid ksb_code, choose an integer from 1 to 50"    
+    assert str(value_error.value) == f"{code} is not a valid ksb_code, choose an int from 1 to 50"    
 
 
 def test_create_ksb_entry_with_valid_ksb_description(test_database):
@@ -127,4 +127,4 @@ def test_create_ksb_entry_with_invalid_ksb_description(test_database):
             ksb_code="Too short",
             description="Test description"
             )
-    assert str(value_error.value) == "Too short is not a valid ksb_code, choose a int from 1 to 25"
+    assert str(value_error.value) == "Too short is not a valid ksb_code, choose an int from 1 to 50"

@@ -36,7 +36,7 @@ class Ksb(BaseModel):
       if self.ksb_code > 0 or self.ksb_code <51:
         return
     else:
-      raise ValueError(f"{self.ksb_code} is not a valid ksb_code, choose a int from 1 to 25")
+      raise ValueError(f"{self.ksb_code} is not a valid ksb_code, choose an int from 1 to 50")
   
   def ksb_description_validator(self):
      if len(self.description) < 15 or len(self.description) > 300:
