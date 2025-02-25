@@ -109,3 +109,12 @@ def test_create_ksb_entry_with_invalid_ksb_code(test_database):
         
         assert value_error.value == f"{code} is not a valid ksb_code, choose an integer from 1 to 50"    
 
+
+def test_create_ksb_entry_with_valid_ksb_description(test_database):
+        Ksb.create(
+        ksb_type="knowledge",
+        ksb_code= 1,
+        description="Test description",
+        )
+        row = Ksb.select()
+        assert row[4].description == "Test description"
