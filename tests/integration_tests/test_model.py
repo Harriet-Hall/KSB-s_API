@@ -65,17 +65,6 @@ def test_create_ksb_entry_with_valid_ksb_types(test_database):
         assert row.ksb_type == ksb_type_values[i].capitalize()
 
     
-    
-def test_ksb_types_first_letter_is_capitalised(test_database):
-    Ksb.create(
-    ksb_type= "knowledge",
-    ksb_code= 1,
-    description="Test description"
-)
-
-    rows = Ksb.select()
-    assert rows[4].ksb_type == "Knowledge"
-    
 def test_error_raised_when_ksb_type_is_invalid(test_database):
     with pytest.raises(ValueError) as value_error:
         Ksb.create(
@@ -98,7 +87,7 @@ def test_create_ksb_entry_with_valid_ksb_code(test_database):
 def test_create_ksb_entry_with_invalid_ksb_code(test_database):
     with pytest.raises(ValueError) as value_error:
 
-        invalid_codes_types = ["3", 7,3]
+        invalid_codes_types = ["3", 7,3, ""]
         for code in invalid_codes_types:
             
             Ksb.create(
@@ -132,7 +121,7 @@ def test_create_ksb_entry_with_invalid_ksb_description(test_database):
     
     
     with pytest.raises(ValueError) as value_error:
-        invalid_descriptions= ["Too short", ("i" * 301)]
+        invalid_descriptions= ["Too short", ("i" * 301), ""]
         for description in invalid_descriptions:
                 
             Ksb.create(
