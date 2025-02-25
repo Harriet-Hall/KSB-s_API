@@ -1,7 +1,8 @@
 import json
 from flask import Flask, jsonify, request
 from database import Ksb
-from utils import check_for_duplicates, KSB_TYPE_CHOICES
+from utils.check_for_duplicates import check_for_duplicates
+from utils.ksb_type_choices import KSB_TYPE_CHOICES
 from peewee import DoesNotExist
 import uuid
 
@@ -29,8 +30,8 @@ def get_ksbs():
 def post_ksb():
 
     ksbs = Ksb.select()
-    
-    if check_for_duplicates(ksbs, request):
+    request_json = json.loads(request.data)
+    if check_for_duplicates(ksbs, request_json):
         return jsonify({"error" : "Ksb already exists in database"}), 409
 
     else:
@@ -134,7 +135,12 @@ def update_ksb(uuid_str):
             except ValueError as value_error:
                 return jsonify({"error": str(value_error)}), 400
              
-        ksb_to_update.save()
+        ksbs = Ksb.select()
+    
+        if check_for_duplicates(ksbs, ksb_to_update):
+            return jsonify({"error" : "Ksb already exists in database"}), 409
+        else:
+            ksb_to_update.save()
 
         updated_ksb = Ksb.get(Ksb.id == uuid_obj)
         return jsonify(
