@@ -98,8 +98,8 @@ def test_create_ksb_entry_with_valid_ksb_code(test_database):
 def test_create_ksb_entry_with_invalid_ksb_code(test_database):
     with pytest.raises(ValueError) as value_error:
 
-        invalid_codes = ["3", 788, 7,3]
-        for code in invalid_codes:
+        invalid_codes_types = ["3", 7,3]
+        for code in invalid_codes_types:
             
             Ksb.create(
             ksb_type="knowledge",
@@ -107,7 +107,16 @@ def test_create_ksb_entry_with_invalid_ksb_code(test_database):
             description="Test description"
             )
         
-    assert str(value_error.value) == f"{code} is not a valid ksb_code, choose an int from 1 to 50"    
+    assert str(value_error.value) == f"{code} is not an integer"    
+    with pytest.raises(ValueError) as value_error:
+            
+            Ksb.create(
+            ksb_type="knowledge",
+            ksb_code=788,
+            description="Test description"
+            )
+        
+    assert str(value_error.value) == f"788 is not a valid ksb_code, choose an int from 1 to 50"    
 
 
 def test_create_ksb_entry_with_valid_ksb_description(test_database):
@@ -120,11 +129,15 @@ def test_create_ksb_entry_with_valid_ksb_description(test_database):
         assert row[4].description == "Test description"
     
 def test_create_ksb_entry_with_invalid_ksb_description(test_database):
-    with pytest.raises(ValueError) as value_error:
     
+    
+    with pytest.raises(ValueError) as value_error:
+        invalid_descriptions= ["Too short", ("i" * 301)]
+        for description in invalid_descriptions:
+                
             Ksb.create(
             ksb_type="knowledge",
-            ksb_code="Too short",
-            description="Test description"
+            ksb_code=12,
+            description=description
             )
-    assert str(value_error.value) == "Too short is not a valid ksb_code, choose an int from 1 to 50"
+    assert str(value_error.value) == "description needs to be more than 15 characters and less than 300 characters in length"
