@@ -118,3 +118,13 @@ def test_create_ksb_entry_with_valid_ksb_description(test_database):
         )
         row = Ksb.select()
         assert row[4].description == "Test description"
+    
+def test_create_ksb_entry_with_invalid_ksb_description(test_database):
+    with pytest.raises(ValueError) as value_error:
+    
+            Ksb.create(
+            ksb_type="knowledge",
+            ksb_code="Too short",
+            description="Test description"
+            )
+    assert str(value_error.value) == "Too short is not a valid ksb_code, choose a int from 1 to 25"
