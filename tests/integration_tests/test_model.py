@@ -88,29 +88,26 @@ def test_create_ksb_entry_with_valid_ksb_code(test_database):
         )
         row = Ksb.select()
         assert row[4].ksb_code == 1
-
-def test_create_ksb_entry_with_invalid_ksb_code(test_database):
-    with pytest.raises(ValueError) as value_error:
-
-        invalid_codes_types = ["3", 7,3, ""]
-        for code in invalid_codes_types:
-            
-            Ksb.create(
-            ksb_type="knowledge",
-            ksb_code=code,
-            description="Test description"
-            )
         
-    assert str(value_error.value) == f"{code} is not an integer"    
+def test_create_ksb_entry_with_invalid_ksb_code_string(test_database):
     with pytest.raises(ValueError) as value_error:
-            
-            Ksb.create(
-            ksb_type="knowledge",
-            ksb_code=788,
-            description="Test description"
-            )
-        
-    assert str(value_error.value) == f"788 is not a valid ksb_code, choose an int from 1 to 50"    
+        Ksb.create(ksb_type="knowledge", ksb_code="3", description="Test description")
+    assert str(value_error.value) == "3 is of type: str, it needs to be an integer"
+
+def test_create_ksb_entry_with_invalid_ksb_code_out_of_range_low(test_database):
+    with pytest.raises(ValueError) as value_error:
+        Ksb.create(ksb_type="knowledge", ksb_code=0, description="Test description")
+    assert str(value_error.value) == "0 is not a valid ksb_code, choose an int from 1 to 50"
+
+def test_create_ksb_entry_with_invalid_ksb_code_out_of_range_high(test_database):
+    with pytest.raises(ValueError) as value_error:
+        Ksb.create(ksb_type="knowledge", ksb_code=51, description="Test description")
+    assert str(value_error.value) == "51 is not a valid ksb_code, choose an int from 1 to 50"
+
+def test_create_ksb_entry_with_invalid_ksb_code_empty_string(test_database):
+    with pytest.raises(ValueError) as value_error:
+        Ksb.create(ksb_type="knowledge", ksb_code="", description="Test description")
+    assert str(value_error.value) == " is of type: str, it needs to be an integer"
 
 
 def test_create_ksb_entry_with_valid_ksb_description(test_database):
