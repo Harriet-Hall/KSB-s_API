@@ -348,3 +348,16 @@ def test_update_ksb_description(mock_client, test_database):
     assert updated_ksb.ksb_code == 7
     assert updated_ksb.description == "updated description"
 
+def test_update_ksb_description_with_invalid_description(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[0]
+    assert ksb_to_update.ksb_code == 5
+
+    data = {"description": ""}
+    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+
+    assert response.status_code == 400
+    response_data = json.loads(response.data)
+
+    assert response_data["error"] == "description needs to be more than 15 characters and less than 300 characters in length"
+    

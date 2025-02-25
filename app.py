@@ -77,8 +77,7 @@ def delete_ksb(uuid_str):
         return jsonify({"error": "uuid is invalid"}), 404
         
        
-
-            
+             
 @app.get("/<ksb_type>")
 def get_ksb_by_type(ksb_type):
 
@@ -103,7 +102,7 @@ def get_ksb_by_type(ksb_type):
 
 @app.put("/<uuid_str>")
 def update_ksb(uuid_str):
-    
+  
     request_json = json.loads(request.data)
     
  
@@ -130,7 +129,12 @@ def update_ksb(uuid_str):
                 
         if "description" in request_json:
             ksb_to_update.description = request_json["description"]
-        ksb_to_update.save()  
+            try:
+                ksb_to_update.ksb_description_validator()
+            except ValueError as value_error:
+                return jsonify({"error": str(value_error)}), 400
+             
+        ksb_to_update.save()
 
         updated_ksb = Ksb.get(Ksb.id == uuid_obj)
         return jsonify(
