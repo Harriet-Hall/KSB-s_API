@@ -37,7 +37,7 @@ class Ksb(BaseModel):
         raise ValueError(f"{self.ksb_code} is not a valid ksb_code, choose an int from 1 to 50")
 
     else:
-      raise ValueError(f"{self.ksb_code} is not an integer")
+      raise ValueError(f"{self.ksb_code} is of type: {type(self.ksb_code).__name__}, it needs to be an integer")
   
   def ksb_description_validator(self):
      if len(self.description) < 15 or len(self.description) > 300:
