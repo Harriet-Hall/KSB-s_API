@@ -1,10 +1,11 @@
 from flask import app
 from peewee import *
 import os 
-from .utils.ksb_type_choices import KSB_TYPE_CHOICES
+from utils.ksb_type_choices import KSB_TYPE_CHOICES
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 psql_db = PostgresqlDatabase(
     os.getenv("DATABASE"),
