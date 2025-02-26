@@ -57,11 +57,11 @@ jobs:
           PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
           IP_ADDRESS: ${{ secrets.EC2_HOST }}
           USER_NAME: ${{ secrets.EC2_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          POSTGRES_PASSWORD: ${{ secrets.PASSWORD }}
+          POSTGRES_DATABASE: ${{ secrets.DATABASE }}
+          POSTGRES_USER: ${{ secrets.USER }}
+          POSTGRES_HOST: ${{ secrets.HOST }}
+          POSTGRES_PORT: ${{ secrets.PORT }}
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i private_key ${USER_NAME}@${IP_ADDRESS} 'bash -s' << 'EOF'
@@ -118,12 +118,12 @@ jobs:
             User=ec2-user
             Group=nginx
             WorkingDirectory=/home/ec2-user/KSB-s_API/app
-            Environment="POSTGRES_PASSWORD=$POSTGRES_PASSWORD"
-            Environment="POSTGRES_DATABASE=$POSTGRES_DATABASE"
-            Environment="POSTGRES_USER=$POSTGRES_USER"
-            Environment="POSTGRES_PORT=$POSTGRES_PORT"
-            Environment="POSTGRES_HOST=localhost"
-            ExecStart=/home/ec2-user/KSB-s_API.git/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 app:app
+            Environment="POSTGRES_PASSWORD=$PASSWORD"
+            Environment="POSTGRES_DATABASE=$DATABASE"
+            Environment="POSTGRES_USER=$USER"
+            Environment="POSTGRES_PORT=$PORT"
+            Environment="POSTGRES_HOST=$HOST"
+            ExecStart=/home/ec2-user/KSB-s_API/app/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 app:app
 
             [Install]
             WantedBy=multi-user.target" | sudo tee /etc/systemd/system/gunicorn.service
