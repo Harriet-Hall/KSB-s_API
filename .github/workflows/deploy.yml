@@ -1,0 +1,139 @@
+name: Flask App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Docker using Docker's official script
+        run: |
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sudo sh get-docker.sh
+        continue-on-error: false
+      - name: Install Docker Compose
+        run: |
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            docker-compose --version
+        continue-on-error: false
+  
+      - name: Start Services
+        run: docker-compose up -d
+  
+      # - name: Run Tests
+      #   env:
+      #     POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      #     POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+      #     POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      #     POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }} 
+      #     POSTGRES_PORT: ${{ secrets.POSTGRES_HOST }} 
+
+            
+      #   run: |
+      #     cd tests
+      #     pytest  
+      #     echo "successfully ran tests"
+
+      - name: Deploy to EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+          IP_ADDRESS: ${{ secrets.EC2_HOST }}
+          USER_NAME: ${{ secrets.EC2_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i private_key ${USER_NAME}@${IP_ADDRESS} 'bash -s' << 'EOF'
+            # Install Git and other dependencies
+            sudo yum update -y
+            sudo yum install -y git
+
+            # Clone or update the repository
+            if [ ! -d "/home/ec2-user/KSB-s_API" ]; then
+              git clone https://github.com/Harriet-Hall/KSB-s_API.git /home/ec2-user/KSB-s_API
+            else
+              cd /home/ec2-user/KSB-s_API && git pull origin main
+            fi
+
+            # Navigate to the repo directory
+            cd /home/ec2-user/KSB-s_API/app
+
+            # Set up virtual environment
+            python3 -m venv venv
+            source venv/bin/activate
+
+            # Install dependencies
+            python -m pip install --upgrade pip
+            pip install -r ../requirements.txt
+
+            # Install and configure NGINX
+            sudo yum install -y nginx
+            echo "
+            server {
+                listen 80;
+                listen [::]:80;
+                server_name 13.53.190.226;
+
+                location / {
+                    proxy_pass http://localhost:8000;
+                    proxy_set_header Host \$host;
+                    proxy_set_header X-Real-IP \$remote_addr;
+                    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto \$scheme;
+                }
+            }" | sudo tee /etc/nginx/conf.d/KSB-s_API.git.conf
+            
+            sudo systemctl restart nginx
+            sudo systemctl enable nginx
+
+            # Set up Gunicorn
+            pip install gunicorn
+            echo "
+            [Unit]
+            Description=gunicorn daemon
+            After=network.target
+
+            [Service]
+            User=ec2-user
+            Group=nginx
+            WorkingDirectory=/home/ec2-user/KSB-s_API/app
+            Environment="POSTGRES_PASSWORD=$POSTGRES_PASSWORD"
+            Environment="POSTGRES_DATABASE=$POSTGRES_DATABASE"
+            Environment="POSTGRES_USER=$POSTGRES_USER"
+            Environment="POSTGRES_PORT=$POSTGRES_PORT"
+            Environment="POSTGRES_HOST=localhost"
+            ExecStart=/home/ec2-user/KSB-s_API.git/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 app:app
+
+            [Install]
+            WantedBy=multi-user.target" | sudo tee /etc/systemd/system/gunicorn.service
+
+            # Restart and enable Gunicorn
+            sudo systemctl daemon-reload
+            sudo systemctl restart gunicorn
+            sudo systemctl enable gunicorn
+
+            # Start and enable NGINX
+            sudo systemctl start nginx
+            sudo systemctl enable nginx
+          EOF
