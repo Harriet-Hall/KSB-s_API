@@ -5,11 +5,11 @@ import os
 
 
 psql_test_db = PostgresqlDatabase(
-    os.getenv("secrets.POSTGRES_DATABASE"),
-    host=os.getenv("secrets.POSTGRES_HOST"),
-    user=os.getenv("secrets.POSTGRES_USER"),
-    password=os.getenv("secrets.POSTGRES_PASSWORD"),
-    port=os.getenv("secrets.POSTGRES_PORT"),
+    os.getenv("POSTGRES_DATABASE"),
+    host=os.getenv("POSTGRES_HOST"),
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASSWORD"),
+    port=os.getenv("POSTGRES_PORT"),
 )
 
 
