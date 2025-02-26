@@ -7,11 +7,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 psql_db = PostgresqlDatabase(
-    os.getenv("DATABASE"),
-    user=os.getenv("USERNAME"),
-    password=os.getenv("PASSWORD"),
-    host=os.getenv("HOST"),
-    port=os.getenv("PORT")
+    os.getenv("secrets.DATABASE"),
+    user=os.getenv("secrets.USERNAME"),
+    password=os.getenv("secrets.PASSWORD"),
+    host=os.getenv("secrets.HOST"),
+    port=os.getenv("secrets.PORT")
 )
 
 class BaseModel(Model):

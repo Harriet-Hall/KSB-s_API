@@ -18,11 +18,11 @@ def mock_client(test_app):
 
 
 psql_test_db = PostgresqlDatabase(
-    os.getenv("TEST_DATABASE"),
-    host=os.getenv("TEST_HOST"),
-    user=os.getenv("TEST_USER"),
-    password=os.getenv("TEST_PASSWORD"),
-    port=os.getenv("TEST_PORT"),
+    os.getenv("secrets.POSTGRES_DATABASE"),
+    host=os.getenv("secrets.POSTGRES_HOST"),
+    user=os.getenv("secrets.POSTGRES_USER"),
+    password=os.getenv("secrets.POSTGRES_PASSWORD"),
+    port=os.getenv("secrets.POSTGRES_PORT"),
 )
 
 
