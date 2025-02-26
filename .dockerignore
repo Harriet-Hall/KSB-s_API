@@ -7,3 +7,4 @@ bin
 include
 lib
 pyvenv.cfg
+buildspec.yml

@@ -1,6 +1,6 @@
 import pytest
 from peewee import *
-from database import Ksb, BaseModel
+from app.database import Ksb
 import os
 
 psql_test_db = PostgresqlDatabase(
