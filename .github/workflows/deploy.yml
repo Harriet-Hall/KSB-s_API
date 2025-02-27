@@ -70,13 +70,12 @@ jobs:
             sudo yum install -y git
 
           # Install Docker
-            if ! command -v docker &> /dev/null
-            then
-            curl -fsSL https://get.docker.com -o get-docker.sh
-            sudo sh get-docker.sh
+            sudo yum update -y
+            sudo yum install -y docker
+            sudo systemctl enable docker
+            sudo systemctl start docker
             sudo usermod -aG docker ec2-user
-            newgrp docker
-          fi
+            
     
           # Install Docker Compose
             if ! command -v docker-compose &> /dev/null
@@ -84,15 +83,27 @@ jobs:
               sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
               sudo chmod +x /usr/local/bin/docker-compose
             fi
-            cd /home/ec2-user/KSB-s_API
 
-          # Stop existing containers (if any)
-            docker-compose down
-  
-            # Build and run the Docker container
-            docker-compose up --build -d
-      
-            echo "App deployed to EC2"
+            echo "Docker installed"
+          
+
+
+            #Clone repo 
+            if [ ! -d "/home/ec2-user/KSB-s_API" ]; then
+            git clone https://github.com/Harriet-Hall/KSB-s_API.git /home/ec2-user/KSB-s_API
+          else
+            cd /home/ec2-user/KSB-s_API && git pull origin main
+          fi
+
+          cd /home/ec2-user/KSB-s_API
+
+          # Stop existing containers if running
+          docker-compose down
+
+          # Build and start the application
+          docker-compose up --build -d
+
+          echo "App deployed to EC2"
           EOF
 
          
