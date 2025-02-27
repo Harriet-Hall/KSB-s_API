@@ -57,16 +57,7 @@ jobs:
           PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
           IP_ADDRESS: ${{ secrets.EC2_HOST }}
           USER_NAME: ${{ secrets.EC2_USER }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          DATABASE: ${{ secrets.DATABASE }}
-          USER: ${{ secrets.USER }}
-          HOST: ${{ secrets.HOST }}
-          PORT: ${{ secrets.PORT }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }} 
-          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }} 
+
 
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
@@ -103,36 +94,19 @@ jobs:
               git pull origin main
           fi
 
-
           cd /home/ec2-user/KSB-s_API
 
           # Set up virtual environment
           python3 -m venv venv
           source venv/bin/activate
 
-          # Install dependencies
+          # Install dependencies 
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          sudo yum install aws-cli
 
-          echo "DB_HOST=$HOST" > .env
-            echo "PORT=$PORT" >> .env
-            echo "USER=$USER" >> .env
-            echo "PASSWORD=$PASSWORD" >> .env
-            echo "DATABASE=$DATABASE" >> .env
-            echo "POSTGRES_DATABASE=$POSTGRES_DATABASE" >> .env
-            echo "POSTGRES_PORT=$POSTGRES_PORT" >> .env
-            echo "POSTGRES_HOST=$POSTGRES_HOST" >> .env
-            echo "POSTGRES_USER=$POSTGRES_USER" >> .env
-            echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
-
-
-          # Stop existing containers if running
-          docker-compose down
-
-          # Build and start the application
-          HOST=${HOST} PORT=${PORT} USER=${USER} PASSWORD=${PASSWORD} DATABASE=${DATABASE} docker build -t flask .
-
-          docker run -p 5000:5000 flask 
+          # Docker compose 
+          docker-compose up -d
 
           echo "App deployed to EC2"
           EOF
