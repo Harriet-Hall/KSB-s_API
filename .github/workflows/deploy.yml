@@ -38,19 +38,19 @@ jobs:
       - name: Start Services
         run: docker-compose up -d
   
-      # - name: Run Tests
-      #   env:
-      #     POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      #     POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
-      #     POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      #     POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }} 
-      #     POSTGRES_PORT: ${{ secrets.POSTGRES_HOST }} 
+      - name: Run Tests
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }} 
+          POSTGRES_PORT: ${{ secrets.POSTGRES_HOST }} 
 
             
-      #   run: |
-      #     cd tests
-      #     pytest  
-      #     echo "successfully ran tests"
+        run: |
+          cd tests
+          pytest  
+          echo "successfully ran tests"
 
       - name: Deploy to EC2
         env:
