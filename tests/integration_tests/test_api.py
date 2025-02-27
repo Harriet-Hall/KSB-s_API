@@ -18,13 +18,12 @@ def mock_client(test_app):
 
 
 psql_test_db = PostgresqlDatabase(
-    os.getenv("POSTGRES_DATABASE"),
-    host=os.getenv("POSTGRES_HOST"),
-    user=os.getenv("POSTGRES_USER"),
-    password=os.getenv("POSTGRES_PASSWORD"),
-    port=os.getenv("POSTGRES_PORT"),
+    "postgres",
+    host="psql_test_db",
+    user="postgres",
+    password="password",
+    port=5432,
 )
-
 
 @pytest.fixture
 def test_database():
