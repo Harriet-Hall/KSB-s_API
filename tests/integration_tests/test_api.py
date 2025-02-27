@@ -1,7 +1,7 @@
 from base64 import decode
-from ...app.app import app
+from app.app import app
 import json
-from ...app.database import Ksb
+from app.database import Ksb
 import pytest
 from peewee import PostgresqlDatabase
 import os
