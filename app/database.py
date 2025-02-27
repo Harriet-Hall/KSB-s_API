@@ -2,7 +2,7 @@ from peewee import *
 import os 
 from .utils.ksb_type_choices import KSB_TYPE_CHOICES
 from dotenv import load_dotenv
-from secrets_manager import get_secret
+from .secrets_manager import get_secret
 
 credentials = get_secret()
 
@@ -19,7 +19,6 @@ psql_db = PostgresqlDatabase(
     host=host,
     port=port
 )
-
 # psql_db = PostgresqlDatabase(
 #     os.getenv("DATABASE"),
 #     user=os.getenv("USERNAME"),
