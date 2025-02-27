@@ -101,7 +101,7 @@ jobs:
           docker-compose down
 
           # Build and start the application
-          docker-compose up --build -d
+          HOST=${HOST} PORT=${PORT} USER=${USER} PASSWORD=${PASSWORD} DATABASE=${DATABASE} docker-compose up --build -d
 
           echo "App deployed to EC2"
           EOF
