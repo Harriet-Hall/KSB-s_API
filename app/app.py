@@ -144,7 +144,7 @@ def update_ksb(uuid_str):
         ksbs = Ksb.select()
         
         if check_for_valid_updates(ksbs, ksb_to_update):
-            return jsonify({"error" : "Ksb already exists in database"}), 409
+            return jsonify({"error" : "Ksb already exists in database with matching value/s"}), 409
         else: 
             ksb_to_update.save() 
             updated_ksb = Ksb.get(Ksb.id == uuid_obj)
