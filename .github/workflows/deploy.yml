@@ -69,6 +69,23 @@ jobs:
             sudo yum update -y
             sudo yum install -y git
 
+          # Install Docker
+            if ! command -v docker &> /dev/null
+            then
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sudo sh get-docker.sh
+            sudo usermod -aG docker ec2-user
+            newgrp docker
+          fi
+    
+          # Install Docker Compose
+            if ! command -v docker-compose &> /dev/null
+            then
+              sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              sudo chmod +x /usr/local/bin/docker-compose
+            fi
+  
+
             # Clone or update the repository
             if [ ! -d "/home/ec2-user/KSB-s_API" ]; then
               git clone https://github.com/Harriet-Hall/KSB-s_API.git /home/ec2-user/KSB-s_API
