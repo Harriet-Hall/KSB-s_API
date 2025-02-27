@@ -2,17 +2,33 @@ from peewee import *
 import os 
 from .utils.ksb_type_choices import KSB_TYPE_CHOICES
 from dotenv import load_dotenv
+from ..secrets_manager import get_secret
 
-load_dotenv()
+credentials = get_secret()
 
+database = credentials["DATABASE"]
+password = credentials["PASSWORD"]
+host = credentials["HOST"]
+port = int(credentials["port"])
+username = credentials["USERNAME"]
 
 psql_db = PostgresqlDatabase(
-    os.getenv("DATABASE"),
-    user=os.getenv("USERNAME"),
-    password=os.getenv("PASSWORD"),
-    host=os.getenv("HOST"),
-    port=os.getenv("PORT")
+    database,
+    user=username, 
+    password=password,
+    host=host,
+    port=port
 )
+
+# psql_db = PostgresqlDatabase(
+#     os.getenv("DATABASE"),
+#     user=os.getenv("USERNAME"),
+#     password=os.getenv("PASSWORD"),
+#     host=os.getenv("HOST"),
+#     port=os.getenv("PORT")
+# )
+
+
 
 class BaseModel(Model):
   class Meta:
