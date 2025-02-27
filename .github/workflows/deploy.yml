@@ -84,73 +84,15 @@ jobs:
               sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
               sudo chmod +x /usr/local/bin/docker-compose
             fi
+            cd /home/ec2-user/KSB-s_API
+
+          # Stop existing containers (if any)
+            docker-compose down
   
-
-            # Clone or update the repository
-            if [ ! -d "/home/ec2-user/KSB-s_API" ]; then
-              git clone https://github.com/Harriet-Hall/KSB-s_API.git /home/ec2-user/KSB-s_API
-            else
-              cd /home/ec2-user/KSB-s_API && git pull origin main
-            fi
-
-            # Navigate to the repo directory
-            cd /home/ec2-user/KSB-s_API/app
-
-            # Set up virtual environment
-            python3 -m venv venv
-            source venv/bin/activate
-
-            # Install dependencies
-            python -m pip install --upgrade pip
-            pip install -r ../requirements.txt
-
-            # Install and configure NGINX
-            sudo yum install -y nginx
-            echo "
-            server {
-                listen 80;
-                listen [::]:80;
-                server_name 18.168.197.8;
-
-                location / {
-                    proxy_pass http://localhost:8000;
-                    proxy_set_header Host \$host;
-                    proxy_set_header X-Real-IP \$remote_addr;
-                    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-                    proxy_set_header X-Forwarded-Proto \$scheme;
-                }
-            }" | sudo tee /etc/nginx/conf.d/KSB-s_API.git.conf
-            
-            sudo systemctl restart nginx
-            sudo systemctl enable nginx
-
-            # Set up Gunicorn
-            pip install gunicorn
-            echo "
-            [Unit]
-            Description=gunicorn daemon
-            After=network.target
-
-            [Service]
-            User=ec2-user
-            Group=nginx
-            WorkingDirectory=/home/ec2-user/KSB-s_API/app
-            Environment="POSTGRES_PASSWORD=$PASSWORD"
-            Environment="POSTGRES_DATABASE=$DATABASE"
-            Environment="POSTGRES_USER=$USER"
-            Environment="POSTGRES_PORT=$PORT"
-            Environment="POSTGRES_HOST=$HOST"
-            ExecStart=/home/ec2-user/KSB-s_API/app/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 app:app
-
-            [Install]
-            WantedBy=multi-user.target" | sudo tee /etc/systemd/system/gunicorn.service
-
-            # Restart and enable Gunicorn
-            sudo systemctl daemon-reload
-            sudo systemctl restart gunicorn
-            sudo systemctl enable gunicorn
-
-            # Start and enable NGINX
-            sudo systemctl start nginx
-            sudo systemctl enable nginx
+            # Build and run the Docker container
+            docker-compose up --build -d
+      
+            echo "App deployed to EC2"
           EOF
+
+         
