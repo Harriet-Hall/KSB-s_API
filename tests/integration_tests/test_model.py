@@ -1,6 +1,6 @@
 import pytest
 from peewee import *
-from app.database import Ksb
+from ...app.database import Ksb
 import os
 
 

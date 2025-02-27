@@ -1,5 +1,5 @@
 import pytest
-from app.database import Ksb, Model, BaseModel
+from ...app.database import Ksb, Model, BaseModel
 
 
 def test_Ksb_model():
