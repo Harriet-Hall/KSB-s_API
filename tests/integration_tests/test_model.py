@@ -5,13 +5,12 @@ import os
 
 
 psql_test_db = PostgresqlDatabase(
-    os.getenv("POSTGRES_DATABASE"),
-    host=os.getenv("POSTGRES_HOST"),
-    user=os.getenv("POSTGRES_USER"),
-    password=os.getenv("POSTGRES_PASSWORD"),
-    port=os.getenv("POSTGRES_PORT"),
+    "postgres",
+    host="psql_test_db",
+    user="postgres",
+    password="password",
+    port=5432,
 )
-
 
 @pytest.fixture(scope="function")
 def test_database():
