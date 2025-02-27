@@ -59,6 +59,7 @@ jobs:
           USER_NAME: ${{ secrets.EC2_USER }}
 
 
+
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i private_key ${USER_NAME}@${IP_ADDRESS} 'bash -s' << 'EOF'
@@ -106,7 +107,10 @@ jobs:
           sudo yum install aws-cli
 
           # Docker compose 
-          docker-compose up -d
+          docker-compose down
+          docker-compose up
+          # docker build -t flask .
+          # docker run -p 5000:5000 flask
 
           echo "App deployed to EC2"
           EOF

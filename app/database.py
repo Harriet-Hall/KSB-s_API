@@ -9,7 +9,7 @@ credentials = get_secret()
 database = credentials["DATABASE"]
 password = credentials["PASSWORD"]
 host = credentials["HOST"]
-port = int(credentials["port"])
+port = int(credentials["PORT"])
 username = credentials["USERNAME"]
 
 psql_db = PostgresqlDatabase(
