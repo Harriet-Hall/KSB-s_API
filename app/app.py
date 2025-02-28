@@ -1,9 +1,9 @@
 import json
 from flask import Flask, jsonify, request
-from .database import Ksb
-from .utils.check_for_duplicates import check_for_duplicates
-from .utils.check_update_is_valid import check_for_valid_updates
-from .utils.ksb_type_choices import KSB_TYPE_CHOICES
+from database import Ksb
+from utils.check_for_duplicates import check_for_duplicates
+from utils.check_update_is_valid import check_for_valid_updates
+from utils.ksb_type_choices import KSB_TYPE_CHOICES
 from peewee import DoesNotExist
 import uuid
 
