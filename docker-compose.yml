@@ -4,6 +4,18 @@ services:
     build: .
     ports:
     - "5000:5000"
+    environment:
+      USERNAME: ${USERNAME}
+      DATABASE:  ${DATABASE}
+      HOST:  ${HOST}
+      PORT:  ${PORT}
+      PASSWORD: ${PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: psql_test_db
 
 
   psql_test_db:
@@ -13,10 +25,10 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_HOST_AUTH_METHOD: "trust"
-      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      POSTGRES_DB: postgres
       POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: psql_test_db
       
 
     ports:

@@ -1,29 +1,10 @@
-from base64 import decode
 from app.app import app
 import json
-from app.database import Ksb
-import pytest
-from peewee import PostgresqlDatabase
 import os
-from secrets_manager import get_secret
+from app.database import Ksb
+from peewee import PostgresqlDatabase
+import pytest
 
-
-credentials = get_secret()
-print(credentials, "credentials")
-
-database = credentials["POSTGRES_DATABASE"]
-password = credentials["POSTGRES_PASSWORD"]
-host = credentials["POSTGRES_HOST"]
-port = int(credentials["POSTGRES_PORT"])
-username = credentials["POSTGRES_USER"]
-
-psql_test_db = PostgresqlDatabase(
-    database,
-    user=username, 
-    password=password,
-    host=host,
-    port=port
-)
 
 @pytest.fixture
 def test_app():
@@ -34,14 +15,14 @@ def test_app():
 def mock_client(test_app):
     return test_app.test_client()
 
+psql_test_db = PostgresqlDatabase(
+    "postgres",
+    host="psql_test_db",
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASSWORD"),
+    port=5432
+)
 
-# psql_test_db = PostgresqlDatabase(
-#     "postgres",
-#     host="psql_test_db",
-#     user="postgres",
-#     password="password",
-#     port=5432,
-# )
 
 @pytest.fixture
 def test_database():

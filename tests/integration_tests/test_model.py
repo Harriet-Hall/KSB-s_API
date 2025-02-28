@@ -5,29 +5,13 @@ import os
 from secrets_manager import get_secret
 
 
-credentials = get_secret()
-
-database = credentials["POSTGRES_DATABASE"]
-password = credentials["POSTGRES_PASSWORD"]
-host = credentials["POSTGRES_HOST"]
-port = int(credentials["POSTGRES_PORT"])
-username = credentials["POSTGRES_USER"]
-
 psql_test_db = PostgresqlDatabase(
-    database,
-    user=username, 
-    password=password,
-    host=host,
-    port=port
+    "postgres",
+    host="psql_test_db",
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASSWORD"),
+    port=5432
 )
-
-# psql_test_db = PostgresqlDatabase(
-#     "postgres",
-#     host="psql_test_db",
-#     user="postgres",
-#     password="password",
-#     port=5432,
-# )
 
 @pytest.fixture(scope="function")
 def test_database():
