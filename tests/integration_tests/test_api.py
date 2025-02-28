@@ -5,7 +5,9 @@ from app.database import Ksb
 import pytest
 from peewee import PostgresqlDatabase
 import os
+from ...secrets_manager import get_secret
 
+credentials = get_secret()
 
 @pytest.fixture
 def test_app():
@@ -16,14 +18,28 @@ def test_app():
 def mock_client(test_app):
     return test_app.test_client()
 
+database = credentials["POSTGRES_DATABASE"]
+password = credentials["POSTGRES_PASSWORD"]
+host = credentials["POSTGRES_HOST"]
+port = int(credentials["POSTGRES_PORT"])
+username = credentials["POSTGRES_USERNAME"]
 
-psql_test_db = PostgresqlDatabase(
-    "postgres",
-    host="psql_test_db",
-    user="postgres",
-    password="password",
-    port=5432,
+psql_db = PostgresqlDatabase(
+    database,
+    user=username, 
+    password=password,
+    host=host,
+    port=port
 )
+
+
+# psql_test_db = PostgresqlDatabase(
+#     "postgres",
+#     host="psql_test_db",
+#     user="postgres",
+#     password="password",
+#     port=5432,
+# )
 
 @pytest.fixture
 def test_database():
