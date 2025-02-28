@@ -25,6 +25,7 @@ def get_secret():
         raise e
 
     secret = get_secret_value_response['SecretString']
+    print(secret, "credentials!")
 
     return json.loads(secret)
 

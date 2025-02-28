@@ -5,7 +5,7 @@ from app.database import Ksb
 import pytest
 from peewee import PostgresqlDatabase
 import os
-from ...secrets_manager import get_secret
+from secrets_manager import get_secret
 
 credentials = get_secret()
 
