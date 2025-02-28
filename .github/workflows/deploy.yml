@@ -81,6 +81,6 @@ jobs:
             cd /home/ec2-user/KSB-s_API
             docker-compose down
             docker-compose up -d
-            echo "App deployed to EC2"
+            
           EOF
       

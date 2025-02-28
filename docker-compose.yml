@@ -4,12 +4,7 @@ services:
     build: .
     ports:
     - "5000:5000"
-    environment:
-      USERNAME: ${USERNAME}
-      DATABASE: ${DATABASE}
-      HOST: ${HOST}
-      PORT: ${PORT}
-      ASSWORD: ${PASSWORD}
+
 
   psql_test_db:
     image: postgres:13.4
