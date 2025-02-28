@@ -25,5 +25,5 @@ def get_secret():
         raise e
 
     secret = get_secret_value_response['SecretString']
-    # return json.loads(secret)
+    return json.loads(secret)
 
