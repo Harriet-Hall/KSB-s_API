@@ -11,7 +11,7 @@ database = credentials["POSTGRES_DATABASE"]
 password = credentials["POSTGRES_PASSWORD"]
 host = credentials["POSTGRES_HOST"]
 port = int(credentials["POSTGRES_PORT"])
-username = credentials["POSTGRES_USERNAME"]
+username = credentials["POSTGRES_USER"]
 
 psql_test_db = PostgresqlDatabase(
     database,

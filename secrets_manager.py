@@ -8,7 +8,7 @@ def get_secret():
     secret_name = "peewee-api-secret"
     region_name = "eu-west-2"
 
-
+    # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(
         service_name='secretsmanager',
@@ -25,7 +25,5 @@ def get_secret():
         raise e
 
     secret = get_secret_value_response['SecretString']
-    print(secret, "credentials!")
-
-    return json.loads(secret)
+    # return json.loads(secret)
 

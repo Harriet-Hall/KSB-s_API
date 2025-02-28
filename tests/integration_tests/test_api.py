@@ -9,6 +9,20 @@ from secrets_manager import get_secret
 
 credentials = get_secret()
 
+database = credentials["POSTGRES_DATABASE"]
+password = credentials["POSTGRES_PASSWORD"]
+host = credentials["POSTGRES_HOST"]
+port = int(credentials["POSTGRES_PORT"])
+username = credentials["POSTGRES_USER"]
+
+psql_test_db = PostgresqlDatabase(
+    database,
+    user=username, 
+    password=password,
+    host=host,
+    port=port
+)
+
 @pytest.fixture
 def test_app():
     yield app
@@ -17,20 +31,6 @@ def test_app():
 @pytest.fixture
 def mock_client(test_app):
     return test_app.test_client()
-
-database = credentials["POSTGRES_DATABASE"]
-password = credentials["POSTGRES_PASSWORD"]
-host = credentials["POSTGRES_HOST"]
-port = int(credentials["POSTGRES_PORT"])
-username = credentials["POSTGRES_USERNAME"]
-
-psql_db = PostgresqlDatabase(
-    database,
-    user=username, 
-    password=password,
-    host=host,
-    port=port
-)
 
 
 # psql_test_db = PostgresqlDatabase(
