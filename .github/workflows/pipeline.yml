@@ -18,9 +18,12 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_password
-          POSTGRES_HOST: postgres
+          user: test_user
+          password: test_password
+          host: postgres
+          port: 5432
+          database: postgres
+
         options: >-
           --health-cmd="pg_isready -U test_user"
           --health-interval=10s
@@ -36,26 +39,22 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and start containers 
+
+      - name: Create .env file
         run: |
-          docker compose up -d 
-          docker compose ps 
+
+          echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> .env
+          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
+ 
+
+      - name: Build and start containers
+        run: |
+          docker compose up -d --env-file .env
+          docker compose ps
           sleep 5
           docker exec -i ksb-s_api-flask_app-1 pytest
-    
-  # run_tests:
-  #     needs: test_setup
-  #     runs-on: ubuntu-latest
-    
-  #     steps:
-  #     - name: Run tests
-  #       run: |
-  #         sleep 5
-  #         docker exec -it ksb-s_api-flask_app-1 pytest
 
-  #     - name: Shut down containers
-  #       run: |
-  #         docker ps
-  #         docker-compose down
+      - name: Stop containers
+        run: docker compose down
 
-    
+
