@@ -11,12 +11,7 @@ services:
       PORT:  ${PORT}
       PASSWORD: ${PASSWORD}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_HOST_AUTH_METHOD: "trust"
-      POSTGRES_DB: postgres
       POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PORT: 5432
-      POSTGRES_HOST: psql_test_db
-
 
   psql_test_db:
     image: postgres:13.4
@@ -24,12 +19,7 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_HOST_AUTH_METHOD: "trust"
-      POSTGRES_DB: postgres
       POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PORT: 5432
-      POSTGRES_HOST: psql_test_db
-      
 
     ports:
       - "5433:5432"

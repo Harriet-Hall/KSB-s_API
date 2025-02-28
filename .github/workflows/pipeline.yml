@@ -1,0 +1,61 @@
+name: Test and deploy flask app
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test_setup:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13.4
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          # POSTGRES_DB: test_db
+        options: >-
+          --health-cmd="pg_isready -U test_user"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and start containers 
+        run: |
+          docker compose up -d 
+          docker compose ps 
+          sleep 5
+          docker exec -i ksb-s_api-flask_app-1 pytest
+    
+  # run_tests:
+  #     needs: test_setup
+  #     runs-on: ubuntu-latest
+    
+  #     steps:
+  #     - name: Run tests
+  #       run: |
+  #         sleep 5
+  #         docker exec -it ksb-s_api-flask_app-1 pytest
+
+  #     - name: Shut down containers
+  #       run: |
+  #         docker ps
+  #         docker-compose down
+
+    
