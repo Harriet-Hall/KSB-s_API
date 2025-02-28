@@ -6,10 +6,11 @@ import pytest
 from peewee import PostgresqlDatabase
 import os
 from secrets_manager import get_secret
-print( get_secret(), "get secret")
+
 
 credentials = get_secret()
-print(credentials, "cred")
+print(credentials, "credentials")
+
 database = credentials["POSTGRES_DATABASE"]
 password = credentials["POSTGRES_PASSWORD"]
 host = credentials["POSTGRES_HOST"]
