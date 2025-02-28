@@ -7,7 +7,7 @@ from secrets_manager import get_secret
 
 psql_test_db = PostgresqlDatabase(
     "postgres",
-    host="psql_test_db",
+    host=os.getenv("POSTGRES_HOST"),
     user=os.getenv("POSTGRES_USER"),
     password=os.getenv("POSTGRES_PASSWORD"),
     port=5432
