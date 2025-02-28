@@ -12,23 +12,21 @@ jobs:
   test_setup:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:13.4
-        ports:
-          - 5432:5432
-        env:
-          user: test_user
-          password: test_password
-          host: postgres
-          port: 5432
-          database: postgres
+    # services:
+    #   postgres:
+    #     image: postgres:13.4
+    #     ports:
+    #       - 5432:5432
+    #     env:
+    #       user: test_user
+    #       password: test_password
+    #       host: postgres
 
-        options: >-
-          --health-cmd="pg_isready -U test_user"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+    #     options: >-
+    #       --health-cmd="pg_isready -U test_user"
+    #       --health-interval=10s
+    #       --health-timeout=5s
+    #       --health-retries=5
 
     steps:
 
@@ -43,13 +41,13 @@ jobs:
       - name: Create .env file
         run: |
 
-          echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> .env
-          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
- 
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          cat .env
 
       - name: Build and start containers
         run: |
-          docker compose up -d --env-file .env
+          docker compose --env-file .env up -d
           docker compose ps
           sleep 5
           docker exec -i ksb-s_api-flask_app-1 pytest
