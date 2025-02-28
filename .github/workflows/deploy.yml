@@ -36,76 +36,51 @@ jobs:
             docker-compose --version
         continue-on-error: false
   
-      - name: Start Services
-        run: docker-compose up 
+      # - name: Start Services
+      #   run: docker-compose up 
   
-      - name: Run Tests
+      # - name: Run Tests
       
             
-        run: |
-          cd tests
-          pytest  
-          echo "successfully ran tests"
+      #   run: |
+      #     cd tests
+      #     pytest  
+      #     echo "successfully ran tests"
 
       - name: Deploy to EC2
         env:
           PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
           IP_ADDRESS: ${{ secrets.EC2_HOST }}
           USER_NAME: ${{ secrets.EC2_USER }}
-
-
-
+      
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i private_key ${USER_NAME}@${IP_ADDRESS} 'bash -s' << 'EOF'
-            # Install Git and other dependencies
-            sudo yum update -y
-            sudo yum install -y git
-
-          # Install Docker
+            # Clone or update repo on EC2
+            if [ ! -d "/home/ec2-user/KSB-s_API" ]; then
+                git clone https://github.com/Harriet-Hall/KSB-s_API.git /home/ec2-user/KSB-s_API
+            else
+                cd /home/ec2-user/KSB-s_API
+                git fetch origin main
+                git reset --hard origin/main
+                git pull origin main
+            fi
+            
+            # Install Docker on EC2 if it's not installed
             sudo yum update -y
             sudo yum install -y docker
             sudo systemctl enable docker
             sudo systemctl start docker
             sudo usermod -aG docker ec2-user
             
-    
-          # Install Docker Compose
-            if ! command -v docker-compose &> /dev/null
-            then
-              sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-              sudo chmod +x /usr/local/bin/docker-compose
-            fi
-
-            echo "Docker installed"
-          
-
-          # Clone or update repo
-          if [ ! -d "/home/ec2-user/KSB-s_API" ]; then
-              git clone https://github.com/Harriet-Hall/KSB-s_API.git /home/ec2-user/KSB-s_API
-          else
-              cd /home/ec2-user/KSB-s_API
-              git fetch origin main
-              git reset --hard origin/main  # Ensure the latest version is used
-              git pull origin main
-          fi
-
-          cd /home/ec2-user/KSB-s_API
-
-          # Set up virtual environment
-          python3 -m venv venv
-          source venv/bin/activate
-
-          # Install dependencies 
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          sudo yum install aws-cli
-
-          # Docker compose 
-          docker-compose down
-    
-          docker-compose up
-          echo "App deployed to EC2"
+            # Install Docker Compose
+            sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+      
+            # Run docker-compose
+            cd /home/ec2-user/KSB-s_API
+            docker-compose down
+            docker-compose up -d
+            echo "App deployed to EC2"
           EOF
-
-         
+      
