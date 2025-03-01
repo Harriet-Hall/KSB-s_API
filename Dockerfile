@@ -8,6 +8,7 @@ RUN pip3 install -r requirements.txt
 COPY . .
 
 ENV PYTHONPATH=/app
+ENV FLASK_APP=app.app.py 
 
 RUN pytest
 
@@ -20,5 +21,7 @@ COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python
 RUN pip3 install -r requirements.txt
 EXPOSE 5000
 ENV PYTHONPATH=/app
+ENV FLASK_APP=app.app.py 
+
 
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
