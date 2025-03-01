@@ -17,7 +17,7 @@ def mock_client(test_app):
 
 test_db = PostgresqlDatabase(
     "postgres",
-    host="postgres",
+    host="test_container",
     user="postgres",
     password="password",
     port=5432
