@@ -14,11 +14,12 @@ FROM python:3.9-slim AS production
 
 WORKDIR /app
 
-COPY --from=builder app/requirements.txt app/requirements.txt
-RUN pip3 install --no-cache-dir -r app/requirements.txt
+# COPY --from=builder app/requirements.txt app/requirements.txt
+# RUN pip3 install --no-cache-dir -r app/requirements.txt
 
-COPY --from=builder /app/app /app/app 
-
+# COPY --from=builder /app/app /app/app 
+COPY . .
+RUN pip3 install -r requirements.txt
 
 ENV PYTHONPATH=/app
 EXPOSE 5000
