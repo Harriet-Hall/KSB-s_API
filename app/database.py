@@ -3,32 +3,37 @@ import os
 from .utils.ksb_type_choices import KSB_TYPE_CHOICES
 from dotenv import load_dotenv
 
-# load_dotenv()
-from .secrets_manager import get_secret
 
-credentials = get_secret()
+if os.getenv('ENVIRONMENT') == 'test':
+  
+    psql_db = PostgresqlDatabase( 
+    "postgres",
+    host="test_db",
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASSWORD"),
+    port=5432
+    )
 
-database = credentials["DATABASE"]
-password = credentials["PASSWORD"]
-host = credentials["HOST"]
-port = int(credentials["PORT"])
-username = credentials["USERNAME"]
+else:
 
-psql_db = PostgresqlDatabase(
-    database,
-    user=username, 
-    password=password,
-    host=host,
-    port=port
-)
+  from .secrets_manager import get_secret
 
-# psql_db = PostgresqlDatabase(
-#     os.getenv("DATABASE"),
-#     user=os.getenv("USERNAME"),
-#     password=os.getenv("PASSWORD"),
-#     host=os.getenv("HOST"),
-#     port=os.getenv("PORT")
-# )
+
+  credentials = get_secret()
+
+  database = credentials["DATABASE"]
+  password = credentials["PASSWORD"]
+  host = credentials["HOST"]
+  port = int(credentials["PORT"])
+  username = credentials["USERNAME"]
+
+  psql_db = PostgresqlDatabase(
+      database,
+      user=username, 
+      password=password,
+      host=host,
+      port=port
+    )
 
 
 

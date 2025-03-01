@@ -1,26 +1,20 @@
 import pytest
 from peewee import *
-from app.database import Ksb
+from app.database import Ksb, psql_db
 import os
+os.environ["ENVIRONMENT"] = "test"
 
 
-test_db = PostgresqlDatabase(
-    "postgres",
-    host="test_db",
-    user=os.getenv("POSTGRES_USER"),
-    password=os.getenv("POSTGRES_PASSWORD"),
-    port=5432
-)
 @pytest.fixture(scope="function")
 def test_database():
-    test_db.bind([Ksb])
-    test_db.connect()
-    with test_db.transaction() as transaction:
+    psql_db.bind([Ksb])
+    psql_db.connect()
+    with psql_db.transaction() as transaction:
         try:
             yield transaction
         finally:
             transaction.rollback()
-    test_db.close()
+    psql_db.close()
 
 
 def test_table_is_seeded(test_database):

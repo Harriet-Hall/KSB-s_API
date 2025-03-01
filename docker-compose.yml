@@ -17,6 +17,7 @@ services:
     ports:
     - "5000:5000"
     environment:
+      ENVIRONMENT: "test"
       USERNAME: ${USERNAME}
       DATABASE:  ${DATABASE}
       HOST:  ${HOST}

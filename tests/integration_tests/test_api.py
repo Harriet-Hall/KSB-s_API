@@ -1,10 +1,10 @@
 from app.app import app
 import json
 import os
-from app.database import Ksb
-from peewee import PostgresqlDatabase
-import pytest
+from app.database import Ksb, psql_db
 
+import pytest
+os.environ["ENVIRONMENT"] = "test"
 
 @pytest.fixture
 def test_app():
@@ -15,24 +15,17 @@ def test_app():
 def mock_client(test_app):
     return test_app.test_client()
 
-test_db = PostgresqlDatabase(
-    "postgres",
-    host="test_db",
-    user=os.getenv("POSTGRES_USER"),
-    password=os.getenv("POSTGRES_PASSWORD"),
-    port=5432
-)
 
 @pytest.fixture
 def test_database():
-    test_db.bind([Ksb])
-    test_db.connect()
-    with test_db.transaction() as transaction:
+    psql_db.bind([Ksb])
+    psql_db.connect()
+    with psql_db.transaction() as transaction:
         try:
             yield transaction
         finally:
             transaction.rollback()
-    test_db.close()
+    psql_db.close()
 
 
 def test_get_request_to_home_endpoint_returns_200(mock_client, test_database):
