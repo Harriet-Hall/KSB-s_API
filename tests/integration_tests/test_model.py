@@ -6,12 +6,11 @@ import os
 
 test_db = PostgresqlDatabase(
     "postgres",
-    host="test_container",
-    user="postgres",
-    password="password",
+    host="test_db",
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASSWORD"),
     port=5432
 )
-
 @pytest.fixture(scope="function")
 def test_database():
     test_db.bind([Ksb])

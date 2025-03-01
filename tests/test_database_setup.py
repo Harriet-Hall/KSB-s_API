@@ -5,7 +5,7 @@ import os
 
 test_db = PostgresqlDatabase(
     "postgres",
-    host="test_container",
+    host="test_db",
     user=os.getenv("POSTGRES_USER"),
     password=os.getenv("POSTGRES_PASSWORD"),
     port=5432

@@ -17,12 +17,11 @@ def mock_client(test_app):
 
 test_db = PostgresqlDatabase(
     "postgres",
-    host="test_container",
-    user="postgres",
-    password="password",
+    host="test_db",
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASSWORD"),
     port=5432
 )
-
 
 @pytest.fixture
 def test_database():
@@ -36,7 +35,7 @@ def test_database():
     test_db.close()
 
 
-def test_get_request_to_home_endpoint_returns_200(mock_client):
+def test_get_request_to_home_endpoint_returns_200(mock_client, test_database):
     response = mock_client.get("/")
     assert response.status_code == 200
 

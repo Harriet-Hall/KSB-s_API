@@ -48,11 +48,14 @@ jobs:
       - name: Build and start containers
         run: |
           docker compose --env-file .env up -d
-          docker compose ps
-          sleep 5
-          docker exec -i ksb-s_api-flask_app-1 pytest
+          sleep 20
+          
+      - name: Run tests
+        run: docker exec -i ksb-s_api-flask_app-1 pytest
+
+
 
       - name: Stop containers
         run: docker compose down
 
-
+       
