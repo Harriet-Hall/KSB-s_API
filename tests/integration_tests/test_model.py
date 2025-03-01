@@ -2,14 +2,13 @@ import pytest
 from peewee import *
 from app.database import Ksb
 import os
-from secrets_manager import get_secret
 
 
 test_db = PostgresqlDatabase(
     "postgres",
-    host="test_db",
-    user=os.getenv("POSTGRES_USER"),
-    password=os.getenv("POSTGRES_PASSWORD"),
+    host="postgres",
+    user="postgres",
+    password="password",
     port=5432
 )
 
