@@ -15,9 +15,9 @@ def test_app():
 def mock_client(test_app):
     return test_app.test_client()
 
-psql_test_db = PostgresqlDatabase(
+test_db = PostgresqlDatabase(
     "postgres",
-    host="psql_test_db",
+    host="test_db",
     user=os.getenv("POSTGRES_USER"),
     password=os.getenv("POSTGRES_PASSWORD"),
     port=5432
@@ -26,14 +26,14 @@ psql_test_db = PostgresqlDatabase(
 
 @pytest.fixture
 def test_database():
-    psql_test_db.bind([Ksb])
-    psql_test_db.connect()
-    with psql_test_db.transaction() as transaction:
+    test_db.bind([Ksb])
+    test_db.connect()
+    with test_db.transaction() as transaction:
         try:
             yield transaction
         finally:
             transaction.rollback()
-    psql_test_db.close()
+    test_db.close()
 
 
 def test_get_request_to_home_endpoint_returns_200(mock_client):

@@ -3,21 +3,21 @@ import pytest
 from peewee import PostgresqlDatabase
 import os
 
-psql_test_db = PostgresqlDatabase(
-    os.getenv("DATABASE"),
-    host=os.getenv("POSTGRES_HOST"),
+test_db = PostgresqlDatabase(
+    "postgres",
+    host="test_db",
     user=os.getenv("POSTGRES_USER"),
     password=os.getenv("POSTGRES_PASSWORD"),
-    port=os.getenv("POSTGRES_PORT"),
+    port=5432
 )
 
 @pytest.fixture
 def test_database():
-    psql_test_db.bind([Ksb])
-    psql_test_db.connect()
-    with psql_test_db.transaction() as transaction:
+    test_db.bind([Ksb])
+    test_db.connect()
+    with test_db.transaction() as transaction:
         try:
             yield transaction
         finally:
             transaction.rollback()
-    psql_test_db.close()
+    test_db.close()

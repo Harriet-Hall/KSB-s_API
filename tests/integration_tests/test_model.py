@@ -5,9 +5,9 @@ import os
 from secrets_manager import get_secret
 
 
-psql_test_db = PostgresqlDatabase(
+test_db = PostgresqlDatabase(
     "postgres",
-    host="psql_test_db",
+    host="test_db",
     user=os.getenv("POSTGRES_USER"),
     password=os.getenv("POSTGRES_PASSWORD"),
     port=5432
@@ -15,14 +15,14 @@ psql_test_db = PostgresqlDatabase(
 
 @pytest.fixture(scope="function")
 def test_database():
-    psql_test_db.bind([Ksb])
-    psql_test_db.connect()
-    with psql_test_db.transaction() as transaction:
+    test_db.bind([Ksb])
+    test_db.connect()
+    with test_db.transaction() as transaction:
         try:
             yield transaction
         finally:
             transaction.rollback()
-    psql_test_db.close()
+    test_db.close()
 
 
 def test_table_is_seeded(test_database):
