@@ -25,18 +25,6 @@ else:
       port=os.getenv("PORT")
   )
 
-# if os.getenv('ENVIRONMENT') == 'test':
-  
-#     test_db = PostgresqlDatabase( 
-#     "postgres",
-#     host="test_db",
-#     user=os.getenv("POSTGRES_USER"),
-#     password=os.getenv("POSTGRES_PASSWORD"),
-#     port=5432
-#     )
-
-# else:
-
   from .secrets_manager import get_secret
 
 
