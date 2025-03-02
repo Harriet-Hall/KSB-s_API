@@ -3,39 +3,58 @@ import os
 from .utils.ksb_type_choices import KSB_TYPE_CHOICES
 from dotenv import load_dotenv
 
-
+psql_db = None
 if os.getenv('ENVIRONMENT') == 'test':
   
-    psql_db = PostgresqlDatabase( 
+  
+   psql_db = PostgresqlDatabase( 
     "postgres",
     host="test_db",
     user=os.getenv("POSTGRES_USER"),
     password=os.getenv("POSTGRES_PASSWORD"),
     port=5432
     )
-
+   
 else:
 
-  from .secrets_manager import get_secret
-
-
-  credentials = get_secret()
-
-  database = credentials["DATABASE"]
-  password = credentials["PASSWORD"]
-  host = credentials["HOST"]
-  port = int(credentials["PORT"])
-  username = credentials["USERNAME"]
-
   psql_db = PostgresqlDatabase(
-      database,
-      user=username, 
-      password=password,
-      host=host,
-      port=port
-    )
+      os.getenv("DATABASE"),
+      user=os.getenv("USERNAME"),
+      password=os.getenv("PASSWORD"),
+      host=os.getenv("HOST"),
+      port=os.getenv("PORT")
+  )
+
+# if os.getenv('ENVIRONMENT') == 'test':
+  
+#     test_db = PostgresqlDatabase( 
+#     "postgres",
+#     host="test_db",
+#     user=os.getenv("POSTGRES_USER"),
+#     password=os.getenv("POSTGRES_PASSWORD"),
+#     port=5432
+#     )
+
+# else:
+
+#   from .secrets_manager import get_secret
 
 
+#   credentials = get_secret()
+
+#   database = credentials["DATABASE"]
+#   password = credentials["PASSWORD"]
+#   host = credentials["HOST"]
+#   port = int(credentials["PORT"])
+#   username = credentials["USERNAME"]
+
+#   psql_db = PostgresqlDatabase(
+#       database,
+#       user=username, 
+#       password=password,
+#       host=host,
+#       port=port
+#     )
 
 class BaseModel(Model):
   class Meta:

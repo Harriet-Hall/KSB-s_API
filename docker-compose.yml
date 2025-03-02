@@ -7,6 +7,7 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: "password"
+      ENVIRONMENT: "test"
     ports:
       - "5433:5432"
     volumes:
@@ -17,7 +18,6 @@ services:
     ports:
     - "5000:5000"
     environment:
-      ENVIRONMENT: "test"
       USERNAME: ${USERNAME}
       DATABASE:  ${DATABASE}
       HOST:  ${HOST}
