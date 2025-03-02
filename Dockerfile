@@ -19,9 +19,9 @@ RUN pip3 install --no-cache-dir -r app/requirements.txt
 
 COPY --from=builder /app/app /app/app 
 
-
+ENV ENVIRONMENT=production
 ENV PYTHONPATH=/app
-EXPOSE 5000
 ENV FLASK_APP=app.app.py
+EXPOSE 5000
 
 CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0"]

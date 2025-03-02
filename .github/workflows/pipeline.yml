@@ -39,11 +39,16 @@ jobs:
         run: |
           docker build --target builder -t flask-app .
           docker compose --env-file .env up -d
-          sleep 5
+          sleep 20
+          docker ps
           
       - name: Run tests
         run: docker exec -i ksb-s_api-flask_app-1 pytest
         continue-on-error: false 
+      - name: Build production image
+        run: |
+          docker compose down 
+          docker build --target builder -t flask-app .
 
       - uses: actions/checkout@v2
       - name: login to docker hub
@@ -63,7 +68,9 @@ jobs:
         run: docker push ${{secrets.DOCKERHUB_USERNAME}}/flask-peewee-app:latest
 
       - name: Stop containers
-        run: docker stop $(docker ps -q) 
+        run: |
+          sudo docker stop $(docker ps -a -q)
+          sudo docker rm $(docker ps -a -q)
       
   deploy:
     needs: test
