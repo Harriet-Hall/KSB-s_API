@@ -16,7 +16,7 @@ if os.getenv('ENVIRONMENT') == 'test':
     )
    
 else:
-
+  print("in production db!" )
   psql_db = PostgresqlDatabase(
       os.getenv("DATABASE"),
       user=os.getenv("USERNAME"),
@@ -37,24 +37,24 @@ else:
 
 # else:
 
-#   from .secrets_manager import get_secret
+  from .secrets_manager import get_secret
 
 
-#   credentials = get_secret()
+  credentials = get_secret()
 
-#   database = credentials["DATABASE"]
-#   password = credentials["PASSWORD"]
-#   host = credentials["HOST"]
-#   port = int(credentials["PORT"])
-#   username = credentials["USERNAME"]
+  database = credentials["DATABASE"]
+  password = credentials["PASSWORD"]
+  host = credentials["HOST"]
+  port = int(credentials["PORT"])
+  username = credentials["USERNAME"]
 
-#   psql_db = PostgresqlDatabase(
-#       database,
-#       user=username, 
-#       password=password,
-#       host=host,
-#       port=port
-#     )
+  psql_db = PostgresqlDatabase(
+      database,
+      user=username, 
+      password=password,
+      host=host,
+      port=port
+    )
 
 class BaseModel(Model):
   class Meta:
