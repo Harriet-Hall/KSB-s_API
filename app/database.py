@@ -16,14 +16,6 @@ if os.getenv('ENVIRONMENT') == 'test':
     )
    
 else:
-  print("in production db!" )
-  psql_db = PostgresqlDatabase(
-      os.getenv("DATABASE"),
-      user=os.getenv("USERNAME"),
-      password=os.getenv("PASSWORD"),
-      host=os.getenv("HOST"),
-      port=os.getenv("PORT")
-  )
 
   from .secrets_manager import get_secret
 
