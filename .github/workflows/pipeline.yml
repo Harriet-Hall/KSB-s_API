@@ -63,10 +63,6 @@ jobs:
         id: push-docker-image
         run: docker push ${{secrets.DOCKERHUB_USERNAME}}/flask-peewee-app:latest
 
-      - name: Stop containers
-        run: |
-          sudo docker stop $(docker ps -a -q)
-          sudo docker rm $(docker ps -a -q)
       
   deploy:
     needs: test
