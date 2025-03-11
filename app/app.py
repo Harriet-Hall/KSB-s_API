@@ -10,7 +10,7 @@ import uuid
 app = Flask(__name__)
 
 
-@app.get("/")
+@app.get("/ksbs")
 def get_ksbs():
     try:
         ksbs = Ksb.select()
@@ -28,7 +28,7 @@ def get_ksbs():
     except Exception:
         return jsonify({"error": "Internal Server Error"}), 500
 
-@app.post("/")
+@app.post("/ksbs")
 def post_ksb():
 
     ksbs = Ksb.select()
@@ -63,7 +63,7 @@ def post_ksb():
         except Exception:
             return jsonify({"error": "Internal Server Error"}), 500
 
-@app.delete("/<uuid_str>")
+@app.delete("/ksbs/<uuid_str>")
 def delete_ksb(uuid_str):
         
     try:
@@ -82,7 +82,7 @@ def delete_ksb(uuid_str):
         
        
              
-@app.get("/<ksb_type>")
+@app.get("/ksbs/<ksb_type>")
 def get_ksb_by_type(ksb_type):
 
     if ksb_type not in  KSB_TYPE_CHOICES:
@@ -105,7 +105,7 @@ def get_ksb_by_type(ksb_type):
     except Exception:
         return jsonify({"error": "Internal Server Error"}), 500
 
-@app.put("/<uuid_str>")
+@app.put("/ksbs/<uuid_str>")
 def update_ksb(uuid_str):
   
     request_json = json.loads(request.data)

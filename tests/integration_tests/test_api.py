@@ -28,13 +28,13 @@ def test_database():
     psql_db.close()
 
 
-def test_get_request_to_home_endpoint_returns_200(mock_client, test_database):
-    response = mock_client.get("/")
+def test_get_request_to_ksbs_endpoint_returns_200(mock_client, test_database):
+    response = mock_client.get("/ksbs")
     assert response.status_code == 200
 
 
-def test_get_request_to_home_endpoint_returns_list_of_ksbs(mock_client, test_database):
-    response = mock_client.get("/")
+def test_get_request_to_ksbs_endpoint_returns_list_of_ksbs(mock_client, test_database):
+    response = mock_client.get("/ksbs")
     response_data = json.loads(response.data)
     assert len(response_data) == 4
     keys = response_data[0].keys()
@@ -43,14 +43,14 @@ def test_get_request_to_home_endpoint_returns_list_of_ksbs(mock_client, test_dat
 
 
 def test_get_request_to_knowledge_endpoint_returns_200(mock_client, test_database):
-    response = mock_client.get("/knowledge")
+    response = mock_client.get("/ksbs/knowledge")
     assert response.status_code == 200
 
 
 def test_get_request_to_knowledge_endpoint_returns_list_of_knowledge_ksbs(
     mock_client, test_database
 ):
-    response = mock_client.get("/knowledge")
+    response = mock_client.get("/ksbs/knowledge")
     response_data = json.loads(response.data)
     assert len(response_data) == 2
     for ksb in response_data:
@@ -60,7 +60,7 @@ def test_get_request_to_knowledge_endpoint_returns_list_of_knowledge_ksbs(
 def test_get_request_to_skill_endpoint_returns_list_of_skill_ksbs(
     mock_client, test_database
 ):
-    response = mock_client.get("/skill")
+    response = mock_client.get("/ksbs/skill")
     response_data = json.loads(response.data)
     assert len(response_data) == 1
     for ksb in response_data:
@@ -70,7 +70,7 @@ def test_get_request_to_skill_endpoint_returns_list_of_skill_ksbs(
 def test_get_request_to_behaviour_endpoint_returns_list_of_behaviour_ksbs(
     mock_client, test_database
 ):
-    response = mock_client.get("/behaviour")
+    response = mock_client.get("/ksbs/behaviour")
     response_data = json.loads(response.data)
     assert len(response_data) == 1
     for ksb in response_data:
@@ -78,15 +78,15 @@ def test_get_request_to_behaviour_endpoint_returns_list_of_behaviour_ksbs(
 
 
 def test_get_request_to_invalid_endpoint_returns_error(mock_client, test_database):
-    response = mock_client.get("/behavir")
+    response = mock_client.get("/ksbs/behavir")
     assert response.status_code == 404
     response_data = json.loads(response.data)
     assert response_data["error"] == "endpoint does not exist"
 
 
-def test_post_a_ksb_to_home_endpoint(mock_client, test_database):
+def test_post_a_ksb_to_ksbs_endpoint(mock_client, test_database):
     data = {"ksb_type": "Knowledge", "ksb_code": 12, "description": "Test description"}
-    response = mock_client.post("/", json=data)
+    response = mock_client.post("/ksbs", json=data)
     assert response.status_code == 201
     response_data = json.loads(response.data)
     assert len(str(response_data["id"])) == 36
@@ -95,13 +95,13 @@ def test_post_a_ksb_to_home_endpoint(mock_client, test_database):
     assert response_data["description"] == "Test description"
 
 
-def test_post_a_ksb_to_home_endpoint_that_already_exists(mock_client, test_database):
+def test_post_a_ksb_to_ksbs_endpoint_that_already_exists(mock_client, test_database):
     data = {
         "ksb_type": "Skill",
         "ksb_code": 9,
         "description": "Using cloud security tools and automating security in pipelines.",
     }
-    response = mock_client.post("/", json=data)
+    response = mock_client.post("/ksbs", json=data)
     assert response.status_code == 409
     response_data = json.loads(response.data)
     assert response_data["error"] == "Ksb already exists in database"
@@ -114,7 +114,7 @@ def test_post_ksb_with_invalid_ksb_type(mock_client, test_database):
         "ksb_code": 10,
         "description": "Assess identified and potential security threats and take appropriate action based on likelihood v impact.",
     }
-    response = mock_client.post("/", json=data)
+    response = mock_client.post("/ksbs", json=data)
     assert response.status_code == 400
     response_data = json.loads(response.data)
     assert response_data["error"] == "invalid is not a valid ksb_type"
@@ -126,7 +126,7 @@ def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
         "ksb_code": 100,
         "description": "Assess identified and potential security threats and take appropriate action based on likelihood v impact.",
     }
-    response = mock_client.post("/", json=data)
+    response = mock_client.post("/ksbs", json=data)
     assert response.status_code == 400
     response_data = json.loads(response.data)
     assert (
@@ -139,14 +139,14 @@ def test_delete_ksb(mock_client, test_database):
     ksbs = Ksb.select()
     ksb_to_delete = ksbs[0]
 
-    response = mock_client.delete(f"/{ksb_to_delete.id}")
+    response = mock_client.delete(f"/ksbs/{ksb_to_delete.id}")
     assert response.status_code == 204
     assert len(Ksb.select()) == 3
 
 
 def test_delete_ksb_that_does_not_exist_in_database(mock_client, test_database):
 
-    response = mock_client.delete(f"/acde070d-8c4c-4f0d-9d8a-162843c10333")
+    response = mock_client.delete(f"/ksbs/acde070d-8c4c-4f0d-9d8a-162843c10333")
     assert response.status_code == 404
     response_data = json.loads(response.data)
     assert (
@@ -159,7 +159,7 @@ def test_delete_ksb_that_does_not_exist_in_database(mock_client, test_database):
 
 def test_delete_ksb_with_invalid_data_returns_an_error(mock_client, test_database):
 
-    response = mock_client.delete(f"/123")
+    response = mock_client.delete(f"/ksbs/123")
     assert response.status_code == 404
     response_data = json.loads(response.data)
     assert response_data["error"] == "uuid is invalid"
@@ -183,7 +183,7 @@ def test_update_ksb(mock_client, test_database):
         "ksb_code": 6,
         "description": "Install, manage and troubleshoot monitoring tools",
     }
-    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+    response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
@@ -210,7 +210,7 @@ def test_update_ksb_with_valid_uuid_but_ksb_does_not_exist_in_database(
         "ksb_code": 6,
         "description": "Install, manage and troubleshoot monitoring tools",
     }
-    response = mock_client.put(f"/acde070d-8c4c-4f0d-9d8a-162843c10333", json=data)
+    response = mock_client.put(f"/ksbs/acde070d-8c4c-4f0d-9d8a-162843c10333", json=data)
     assert response.status_code == 404
     
 
@@ -222,7 +222,7 @@ def test_update_ksb_with_invalid_uuid(mock_client, test_database):
         "ksb_code": 6,
         "description": "Install, manage and troubleshoot monitoring tools",
     }
-    response = mock_client.put(f"/123", json=data)
+    response = mock_client.put(f"/ksbs/123", json=data)
     assert response.status_code == 404
     response_data = json.loads(response.data)
     assert response_data["error"] == "uuid is invalid"
@@ -243,7 +243,7 @@ def test_update_ksb_type(mock_client, test_database):
     data = {
         "ksb_type": "Skill",
     }
-    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+    response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
@@ -264,7 +264,7 @@ def test_update_ksb_with_invalid_ksb_type(mock_client, test_database):
     assert ksb_to_update.ksb_type == "Knowledge"
 
     data = {"ksb_type": "ski1111"}
-    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+    response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
     assert response.status_code == 400
     response_data = json.loads(response.data)
 
@@ -284,7 +284,7 @@ def test_update_ksb_code(mock_client, test_database):
     data = {
         "ksb_code": 4,
     }
-    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+    response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
@@ -306,7 +306,7 @@ def test_update_ksb_with_invalid_ksb_code(mock_client, test_database):
     assert ksb_to_update.ksb_code == 5
 
     data = {"ksb_code": 2.2}
-    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+    response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
     assert response.status_code == 400
     response_data = json.loads(response.data)
 
@@ -326,7 +326,7 @@ def test_update_ksb_description(mock_client, test_database):
     data = {
         "description": "updated description",
     }
-    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+    response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
@@ -344,7 +344,7 @@ def test_update_ksb_description_with_invalid_description(mock_client, test_datab
     assert ksb_to_update.ksb_code == 5
 
     data = {"description": ""}
-    response = mock_client.put(f"/{ksb_to_update.id}", json=data)
+    response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
 
     assert response.status_code == 400
     response_data = json.loads(response.data)
