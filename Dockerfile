@@ -4,6 +4,7 @@ WORKDIR /app
 
 
 COPY . .
+RUN pip cache purge
 RUN pip3 install -r requirements.txt
 
 ENV PYTHONPATH=/app
