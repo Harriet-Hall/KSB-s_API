@@ -91,7 +91,7 @@ def test_create_ksb_entry_with_invalid_ksb_code_out_of_range_low(test_database):
         Ksb.create(ksb_type="knowledge", ksb_code=0, description="Test description")
     assert (
         str(value_error.value)
-        == "0 is not a valid ksb_code, choose an int from 1 to 50"
+        == "0 is not a valid ksb code, choose an int from 1 to 50"
     )
 
 
@@ -100,7 +100,7 @@ def test_create_ksb_entry_with_invalid_ksb_code_out_of_range_high(test_database)
         Ksb.create(ksb_type="knowledge", ksb_code=51, description="Test description")
     assert (
         str(value_error.value)
-        == "51 is not a valid ksb_code, choose an int from 1 to 50"
+        == "51 is not a valid ksb code, choose an int from 1 to 50"
     )
 
 

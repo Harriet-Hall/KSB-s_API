@@ -5,6 +5,6 @@ def check_for_duplicates(ksbs, post_payload):
     description = post_payload["description"]
 
     for ksb in ksbs:
-        if ksb.ksb_type == type and ksb.ksb_code == code and ksb.description == description:
+        if ksb.ksb_type == type and ksb.ksb_code == code or ksb.description == description:
             return True
             

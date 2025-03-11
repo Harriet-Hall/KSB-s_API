@@ -132,7 +132,7 @@ def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
     response_data = json.loads(response.data)
     assert (
         response_data["error"]
-        == "100 is not a valid ksb_code, choose an int from 1 to 50"
+        == "100 is not a valid ksb code, choose an int from 1 to 50"
     )
 
 
