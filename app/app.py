@@ -38,7 +38,7 @@ def post_ksb(ksb_type):
     ksbs = Ksb.select()
     request_data = request.json
     request_dict = {"ksb_type" : ksb_type.capitalize(), 
-                    "ksb_code": request_data["ksb_code"],
+                    "ksb_code": request_data["code"],
                     "description": request_data["description"]
                     }
 
@@ -125,16 +125,16 @@ def update_ksb(uuid_str):
         ksb_to_update = Ksb.get(Ksb.id == uuid_obj)
 
      
-        if "ksb_type" in request_json:
-            ksb_to_update.ksb_type = request_json["ksb_type"].capitalize()
+        if "type" in request_json:
+            ksb_to_update.ksb_type = request_json["type"].capitalize()
             try:
                 ksb_to_update.ksb_type_validator()
             except ValueError as value_error:
                 return jsonify({"error": str(value_error)}), 400
             
             
-        if "ksb_code" in request_json:    
-            ksb_to_update.ksb_code = request_json["ksb_code"]
+        if "code" in request_json:    
+            ksb_to_update.ksb_code = request_json["code"]
             try:
                 ksb_to_update.ksb_code_validator()
             except ValueError as value_error:
