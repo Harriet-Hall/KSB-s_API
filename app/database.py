@@ -9,10 +9,10 @@ if os.getenv('ENVIRONMENT') == 'test':
   
    psql_db = PostgresqlDatabase( 
     "postgres",
-    host="test_db",
+    host="localhost",
     user=os.getenv("POSTGRES_USER"),
     password=os.getenv("POSTGRES_PASSWORD"),
-    port=5432
+    port=5433
     )
    
 else:

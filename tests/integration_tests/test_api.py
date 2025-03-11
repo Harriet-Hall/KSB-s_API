@@ -84,9 +84,9 @@ def test_get_request_to_invalid_endpoint_returns_error(mock_client, test_databas
     assert response_data["error"] == "endpoint does not exist"
 
 
-def test_post_a_ksb_to_ksbs_endpoint(mock_client, test_database):
-    data = {"ksb_type": "Knowledge", "ksb_code": 12, "description": "Test description"}
-    response = mock_client.post("/ksbs", json=data)
+def test_post_a_ksb_to_correct_ksbs_type_endpoint(mock_client, test_database):
+    data = {"ksb_code": 12, "description": "Test description"}
+    response = mock_client.post("/ksbs/knowledge", json=data)
     assert response.status_code == 201
     response_data = json.loads(response.data)
     assert len(str(response_data["id"])) == 36
@@ -95,38 +95,36 @@ def test_post_a_ksb_to_ksbs_endpoint(mock_client, test_database):
     assert response_data["description"] == "Test description"
 
 
-def test_post_a_ksb_to_ksbs_endpoint_that_already_exists(mock_client, test_database):
+def test_post_a_ksb_that_already_exists_returns_error(mock_client, test_database):
     data = {
-        "ksb_type": "Skill",
         "ksb_code": 9,
         "description": "Using cloud security tools and automating security in pipelines.",
     }
-    response = mock_client.post("/ksbs", json=data)
+
+    response = mock_client.post("/ksbs/skill", json=data)
     assert response.status_code == 409
     response_data = json.loads(response.data)
     assert response_data["error"] == "Ksb already exists in database"
     assert len(Ksb.select()) == 4
 
 
-def test_post_ksb_with_invalid_ksb_type(mock_client, test_database):
+def test_post_ksb_to_invalid_ksb_type_endpoint(mock_client, test_database):
     data = {
-        "ksb_type": "invalid",
         "ksb_code": 10,
         "description": "Assess identified and potential security threats and take appropriate action based on likelihood v impact.",
     }
-    response = mock_client.post("/ksbs", json=data)
-    assert response.status_code == 400
+    response = mock_client.post("/ksbs/invalid", json=data)
+    assert response.status_code == 404
     response_data = json.loads(response.data)
-    assert response_data["error"] == "invalid is not a valid ksb_type"
+    assert response_data["error"] == "endpoint does not exist"
 
 
 def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
     data = {
-        "ksb_type": "behaviour",
         "ksb_code": 100,
         "description": "Assess identified and potential security threats and take appropriate action based on likelihood v impact.",
     }
-    response = mock_client.post("/ksbs", json=data)
+    response = mock_client.post("/ksbs/Behaviour", json=data)
     assert response.status_code == 400
     response_data = json.loads(response.data)
     assert (

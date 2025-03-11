@@ -28,27 +28,35 @@ def get_ksbs():
     except Exception:
         return jsonify({"error": "Internal Server Error"}), 500
 
-@app.post("/ksbs")
-def post_ksb():
-
+@app.post("/ksbs/<ksb_type>")
+def post_ksb(ksb_type):
+      
+    
+    if ksb_type not in  KSB_TYPE_CHOICES:
+        return  jsonify({"error": "endpoint does not exist"}), 404
+        
     ksbs = Ksb.select()
     request_data = request.json
-    if check_for_duplicates(ksbs, request_data):
+    request_dict = {"ksb_type" : ksb_type.capitalize(), 
+                    "ksb_code": request_data["ksb_code"],
+                    "description": request_data["description"]
+                    }
+
+    if check_for_duplicates(ksbs, request_dict):
         return jsonify({"error" : "Ksb already exists in database"}), 409
 
     else:
         try:
-
-            new_row = Ksb.create(**request.json)
+                  
+            new_row = Ksb.create(**request_dict)
 
             new_ksb = Ksb.select().where(
                 Ksb.ksb_type == new_row.ksb_type,
                 Ksb.ksb_code == new_row.ksb_code,
                 Ksb.description == new_row.description,
             )
-
-            
             ksb = new_ksb[0]
+            
             return jsonify(
                 {
                     "id": ksb.id,
