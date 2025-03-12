@@ -14,11 +14,17 @@ def test_ksb_properties_have_correct_types():
         ksb_type="knowledge",
         ksb_code=1,
         description="Test description",
+        created_at="Wed, 12 Mar 2025 12:45:39 GMT",
+        updated_at="Wed, 12 Mar 2025 12:45:39 GMT"
+        
     )
     assert isinstance(ksb.id, str)
     assert isinstance(ksb.ksb_type, str)
     assert isinstance(ksb.ksb_code, int)
     assert isinstance(ksb.description, str)
+    assert isinstance(ksb.created_at, str)
+    assert isinstance(ksb.updated_at, str)
+    
 
 
 def test_ksb_type_validator_with_valid_ksb_type():

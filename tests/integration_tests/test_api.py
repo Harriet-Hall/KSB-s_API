@@ -39,7 +39,7 @@ def test_get_request_to_ksbs_endpoint_returns_list_of_ksbs(mock_client, test_dat
     assert len(response_data) == 4
     keys = response_data[0].keys()
     for key in keys:
-        assert key in ["id", "type", "code", "description"]
+        assert key in ["id", "type", "code", "description", "created_at", "updated_at"]
 
 
 def test_get_request_to_knowledge_endpoint_returns_200(mock_client, test_database):
@@ -87,11 +87,10 @@ def test_get_request_to_invalid_endpoint_returns_error(mock_client, test_databas
 def test_post_a_ksb_to_correct_ksbs_type_endpoint(mock_client, test_database):
     data = {"code": 12, "description": "Test description"}
     response = mock_client.post("/ksbs/knowledge", json=data)
-    print(response, "RD")
     
     assert response.status_code == 201
     response_data = json.loads(response.data)
-    print(response_data, "RD")
+
     assert len(str(response_data["id"])) == 36
     assert response_data["type"] == "Knowledge"
     assert response_data["code"] == 12
@@ -213,7 +212,8 @@ def test_update_ksb_with_valid_uuid_but_ksb_does_not_exist_in_database(
     }
     response = mock_client.put(f"/ksbs/acde070d-8c4c-4f0d-9d8a-162843c10333", json=data)
     assert response.status_code == 404
-    
+    response_data = json.loads(response.data)
+    assert response_data["error"] == "ksb with that uuid does not exist in database"
 
 
 def test_update_ksb_with_invalid_uuid(mock_client, test_database):
@@ -343,6 +343,7 @@ def test_update_ksb_description_with_invalid_description(mock_client, test_datab
     ksbs = Ksb.select()
     ksb_to_update = ksbs[0]
     assert ksb_to_update.ksb_code == 5
+    assert ksb_to_update.description == "Modern security tools and techniques, including threat modelling and vulnerability scanning."
 
     data = {"description": ""}
     response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
@@ -351,4 +352,14 @@ def test_update_ksb_description_with_invalid_description(mock_client, test_datab
     response_data = json.loads(response.data)
 
     assert response_data["error"] == "description needs to be more than 15 characters and less than 300 characters in length"
-    
+
+def test_updated_at_value_changes_when_ksb_is_updated(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[1]
+    data = {
+        "description": "updated description",
+    }
+    print(ksb_to_update.updated_at)
+    response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
+    response_data = json.loads(response.data)
+    assert response_data["updated_at"] != ksb_to_update.updated_at

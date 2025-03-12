@@ -20,6 +20,8 @@ def get_ksbs():
                 "type": ksb.ksb_type,
                 "code": ksb.ksb_code,
                 "description": ksb.description,
+                "created_at": ksb.created_at,
+                "updated_at" : ksb.updated_at
             }
             for ksb in ksbs
         ]
@@ -63,6 +65,8 @@ def post_ksb(ksb_type):
                     "type": ksb.ksb_type,
                     "code": ksb.ksb_code,
                     "description": ksb.description,
+                    "created_at": ksb.created_at,
+                    
                 }
             ), 201
 
@@ -105,6 +109,9 @@ def get_ksb_by_type(ksb_type):
                 "type": ksb.ksb_type,
                 "code": ksb.ksb_code,
                 "description": ksb.description,
+                "created_at": ksb.created_at,
+                "updated_at" : ksb.updated_at
+                
             }
             for ksb in filtered_list
         ]
@@ -163,6 +170,9 @@ def update_ksb(uuid_str):
                 "type": updated_ksb.ksb_type,
                 "code": updated_ksb.ksb_code,
                 "description": updated_ksb.description,
+                "created_at": updated_ksb.created_at,
+                "updated_at" : updated_ksb.updated_at
+                
             }), 200
        
     except DoesNotExist:

@@ -1,4 +1,5 @@
 from peewee import *
+import datetime
 import os 
 from .utils.ksb_type_choices import KSB_TYPE_CHOICES
 from dotenv import load_dotenv
@@ -46,6 +47,9 @@ class Ksb(BaseModel):
   ksb_type = CharField(null=True)
   ksb_code = IntegerField(null=True)
   description = CharField()
+  created_at = DateTimeField(default=datetime.datetime.now)
+  updated_at = DateTimeField(default=datetime.datetime.now)
+  
 
   def ksb_type_validator(self):
     if self.ksb_type not in KSB_TYPE_CHOICES:
