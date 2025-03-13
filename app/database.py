@@ -80,4 +80,7 @@ class Ksb(BaseModel):
 
 
 class Theme(BaseModel):
-  pass
+  id=UUIDField(primary_key=True)
+  theme_name = CharField(null=True)
+  created_at = DateTimeField(default=datetime.datetime.now)
+  
