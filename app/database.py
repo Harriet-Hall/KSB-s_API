@@ -76,3 +76,8 @@ class Ksb(BaseModel):
     self.ksb_description_validator()
     
     super(Ksb, self).save(**kwargs)
+
+
+
+class Theme(BaseModel):
+  pass
