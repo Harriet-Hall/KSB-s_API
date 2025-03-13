@@ -2,7 +2,7 @@ from peewee import *
 import datetime
 import os 
 from .utils.ksb_type_choices import KSB_TYPE_CHOICES
-from dotenv import load_dotenv
+
 
 psql_db = None
 if os.getenv('ENVIRONMENT') == 'test':
