@@ -47,11 +47,6 @@ class Theme(BaseModel):
   id=UUIDField(primary_key=True)
   theme_name = CharField(null=True)
   
-  def theme_name_validator(self):
-    if self.theme_name in ["Code quality", "Meeting user needs", "The CI-CD pipeline", "Refreshing and patching", "Operability", "Data persistence", "Automation", "Data security"]:
-      return self.theme_name
-    
-    
 
 class Ksb(BaseModel):
 
