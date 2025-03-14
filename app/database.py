@@ -41,6 +41,18 @@ class BaseModel(Model):
   class Meta:
     database = psql_db
 
+
+class Theme(BaseModel):
+  
+  id=UUIDField(primary_key=True)
+  theme_name = CharField(null=True)
+  
+  def theme_name_validator(self):
+    if self.theme_name in ["Code quality", "Meeting user needs", "The CI-CD pipeline", "Refreshing and patching", "Operability", "Data persistence", "Automation", "Data security"]:
+      return self.theme_name
+    
+    
+
 class Ksb(BaseModel):
 
   id = UUIDField(primary_key=True)
@@ -49,7 +61,7 @@ class Ksb(BaseModel):
   description = CharField()
   created_at = DateTimeField(default=datetime.datetime.now)
   updated_at = DateTimeField(default=datetime.datetime.now)
-  
+
 
   def ksb_type_validator(self):
     if self.ksb_type not in KSB_TYPE_CHOICES:
@@ -78,9 +90,8 @@ class Ksb(BaseModel):
     super(Ksb, self).save(**kwargs)
 
 
-
-class Theme(BaseModel):
-  id=UUIDField(primary_key=True)
-  theme_name = CharField(null=True)
-  created_at = DateTimeField(default=datetime.datetime.now)
-  
+class ThemeKsb(BaseModel):
+  pass
+    # theme_id=
+    # ksb_id = 
+    
