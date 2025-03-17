@@ -1,3 +1,13 @@
+
+    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+    CREATE TABLE IF NOT EXISTS theme(
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        theme_name VARCHAR(100)    NOT NULL
+    );
+    INSERT INTO theme (theme_name)
+    VALUES  ('Code quality'), ('Meeting user needs'), ('The CI-CD pipeline'), ('Refreshing and patching'), ('Operability'), ('Data persistence'), ('Automation'), ('Data security');
+
+
     CREATE OR REPLACE FUNCTION trigger_set_timestamp()
     RETURNS TRIGGER AS $$
     BEGIN
@@ -5,7 +15,7 @@
     RETURN NEW;
     END;
     $$ LANGUAGE plpgsql;
-    
+
     CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
     CREATE TABLE IF NOT EXISTS ksb(
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -15,7 +25,6 @@
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
-    
     CREATE TRIGGER set_timestamp
     BEFORE UPDATE ON ksb
     FOR EACH ROW

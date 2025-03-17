@@ -10,16 +10,15 @@ if os.getenv('ENVIRONMENT') == 'test':
   
    psql_db = PostgresqlDatabase( 
     "postgres",
-    host="test_db",
+    host="localhost",
     user=os.getenv("POSTGRES_USER"),
     password=os.getenv("POSTGRES_PASSWORD"),
-    port=5432
+    port=5433
     )
    
 else:
 
   from .secrets_manager import get_secret
-
 
   credentials = get_secret()
 
@@ -84,9 +83,3 @@ class Ksb(BaseModel):
     
     super(Ksb, self).save(**kwargs)
 
-
-class ThemeKsb(BaseModel):
-  pass
-    # theme_id=
-    # ksb_id = 
-    
