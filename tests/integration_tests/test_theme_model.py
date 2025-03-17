@@ -21,3 +21,9 @@ def test_table_is_seeded(test_database):
     rows = Theme.select()
     assert len(rows) == 8
     
+def test_table_contains_correct_data(test_database):
+    rows = Theme.select()
+    row = rows[0]
+    assert row.id is not None 
+    assert row.theme_name == "Code quality"
+    
