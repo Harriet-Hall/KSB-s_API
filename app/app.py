@@ -189,8 +189,7 @@ def update_ksb(uuid_str):
 @app.get("/ksbs/theme/<theme_name>")
 def get_ksbs_by_theme(theme_name):
     try:
-        name = theme_name.replace("-", " ").title()
-       
+        name = theme_name.replace("-", " ")
         theme = Theme.get(theme_name = name)
         ksbs_from_chosen_theme = ThemeKsb.select(ThemeKsb.ksb_id).where(ThemeKsb.theme_id == theme.id)
         ksb_list = []

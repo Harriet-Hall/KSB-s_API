@@ -5,8 +5,7 @@
         theme_name VARCHAR(100)    NOT NULL
     );
     INSERT INTO theme (theme_name)
-    VALUES  ('Code Quality'), ('Meeting User Needs'), ('The CI CD Pipeline'), ('Refreshing and Patching'), ('Operability'), ('Data Persistence'), ('Automation'), ('Data Security');
-
+    VALUES ('code quality'), ('meeting user needs'), ('the ci cd pipeline'), ('refreshing and patching'), ('operability'), ('data persistence'), ('automation'), ('data security');
 
     CREATE OR REPLACE FUNCTION trigger_set_timestamp()
     RETURNS TRIGGER AS $$
@@ -44,21 +43,21 @@
     );
     INSERT INTO themeksb (theme_id, ksb_id)
     SELECT 
-        (SELECT id FROM theme WHERE theme_name = 'Code Quality'),
+        (SELECT id FROM theme WHERE theme_name = 'code quality'),
         (SELECT id FROM ksb WHERE description = 'Modern security tools and techniques, including threat modelling and vulnerability scanning.');
 
     INSERT INTO themeksb (theme_id, ksb_id)
     SELECT 
-        (SELECT id FROM theme WHERE theme_name = 'Code Quality'),
+        (SELECT id FROM theme WHERE theme_name = 'code quality'),
         (SELECT id FROM ksb WHERE description = 'General purpose programming and infrastructure-as-code.');
 
     INSERT INTO themeksb (theme_id, ksb_id)
     SELECT 
-        (SELECT id FROM theme WHERE theme_name = 'The CI CD Pipeline'),
+        (SELECT id FROM theme WHERE theme_name = 'the ci cd pipeline'),
         (SELECT id FROM ksb WHERE description = 'Using cloud security tools and automating security in pipelines.');
 
     INSERT INTO themeksb (theme_id, ksb_id)
     SELECT 
-        (SELECT id FROM theme WHERE theme_name = 'Data Security'),
+        (SELECT id FROM theme WHERE theme_name = 'data security'),
         (SELECT id FROM ksb WHERE description = 'Modern security tools and techniques, including threat modelling and vulnerability scanning.');
 
