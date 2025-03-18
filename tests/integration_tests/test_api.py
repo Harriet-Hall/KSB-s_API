@@ -359,7 +359,6 @@ def test_updated_at_value_changes_when_ksb_is_updated(mock_client, test_database
     data = {
         "description": "updated description",
     }
-    print(ksb_to_update.updated_at)
     response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
     response_data = json.loads(response.data)
     assert response_data["updated_at"] != ksb_to_update.updated_at
