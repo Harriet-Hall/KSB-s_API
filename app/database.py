@@ -1,3 +1,4 @@
+import uuid
 from peewee import *
 import datetime
 import os 
@@ -10,10 +11,10 @@ if os.getenv('ENVIRONMENT') == 'test':
   
    psql_db = PostgresqlDatabase( 
     "postgres",
-    host="localhost",
+    host="test_db",
     user=os.getenv("POSTGRES_USER"),
     password=os.getenv("POSTGRES_PASSWORD"),
-    port=5433
+    port=5432
     )
    
 else:
@@ -43,13 +44,13 @@ class BaseModel(Model):
 
 class Theme(BaseModel):
   
-  id=UUIDField(primary_key=True)
+  id=UUIDField(primary_key=True, default=uuid.uuid4)
   theme_name = CharField(null=True)
   
 
 class Ksb(BaseModel):
 
-  id = UUIDField(primary_key=True)
+  id = UUIDField(primary_key=True, default=uuid.uuid4)
   ksb_type = CharField(null=True)
   ksb_code = IntegerField(null=True)
   description = CharField()
@@ -83,3 +84,9 @@ class Ksb(BaseModel):
     
     super(Ksb, self).save(**kwargs)
 
+class ThemeKsb(BaseModel):
+    theme_id = ForeignKeyField(Theme, backref = 'ksbs')
+    ksb_id = ForeignKeyField(Ksb, backref = 'themes')
+    class Meta:
+        primary_key = CompositeKey('theme_id', 'ksb_id')
+        

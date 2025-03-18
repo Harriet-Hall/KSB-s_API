@@ -35,3 +35,9 @@
             ('Knowledge', 7, 'General purpose programming and infrastructure-as-code.'),  
             ('Skill', 9, 'Using cloud security tools and automating security in pipelines.'),  
             ('Behaviour', 3, 'Takes ownership of deployed code and learns from failures.');  
+
+    CREATE TABLE IF NOT EXISTS themeksb(
+        theme_id UUID REFERENCES theme(id),
+        ksb_id UUID REFERENCES ksb(id),
+        PRIMARY KEY (theme_id, ksb_id)
+    );
