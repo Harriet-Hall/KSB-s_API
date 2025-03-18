@@ -1,7 +1,7 @@
 from app.app import app
 import json
 import os
-from app.database import Ksb, ThemeKsb, psql_db
+from app.database import Ksb, Theme, ThemeKsb, psql_db
 
 import pytest
 os.environ["ENVIRONMENT"] = "test"
@@ -373,4 +373,16 @@ def test_get_request_to_theme_endpoint_returns_ksbs_for_that_theme(mock_client, 
     response = mock_client.get("/ksbs/theme/code-quality")
     response_data = json.loads(response.data)
     assert len(response_data) == 2
+    
+
+def test_post_a_ksb_to_theme_endpoint(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb = ksbs[1]
+    data = {"ksb_id": f"{ksb.id}"}
+    theme = Theme.get(theme_name = "operability")
+    response = mock_client.post("/ksbs/theme/operability", json=data)
+    response_data = json.loads(response.data)
+
+    assert response_data["ksb_id"] == str(ksb.id)
+    assert response_data["theme_id"] == str(theme.id)
     

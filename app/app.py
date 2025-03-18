@@ -93,7 +93,6 @@ def delete_ksb(uuid_str):
         return jsonify({"error": "uuid is invalid"}), 404
         
     except Exception as e:
-        print(e)
         return jsonify({"error": "Internal Server Error"}), 500    
 
              
@@ -213,6 +212,28 @@ def get_ksbs_by_theme(theme_name):
     except Exception:
         return jsonify({"error": "Internal Server Error"}), 500
 
+
+@app.post("/ksbs/theme/<theme_name>")
+def post_ksbs_to_themeksb(theme_name):
+    request_data = request.json
+    name = theme_name.replace("-", " ")
+    theme = Theme.get(Theme.theme_name == name)
+   
+    ThemeKsb.create(ksb_id=request_data["ksb_id"], theme_id=theme.id)
+
+        
+    new_themeksb = ThemeKsb.get(ksb_id = request_data["ksb_id"], theme_id=theme.id)
+
+    return jsonify(
+        {
+            "ksb_id" : new_themeksb.ksb_id.id,
+            "theme_id" : new_themeksb.theme_id.id,
+        } ), 201
+    
+    
+    
+    
+    
     
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
