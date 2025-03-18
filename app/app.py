@@ -1,6 +1,6 @@
 import json
 from flask import Flask, jsonify, request
-from .database import Ksb
+from .database import Ksb, Theme, ThemeKsb
 from .utils.check_for_duplicates import check_for_duplicates
 from .utils.check_update_is_valid import check_for_valid_updates
 from .utils.ksb_type_choices import KSB_TYPE_CHOICES
@@ -181,6 +181,40 @@ def update_ksb(uuid_str):
         return jsonify({"error": "uuid is invalid"}), 404   
     except Exception:
         return jsonify({"error": "Internal Server Error"}), 500
+
+
+@app.get("/ksbs/theme/<theme_name>")
+def get_ksbs_by_theme(theme_name):
+    try:
+        name = theme_name.replace("-", " ").title()
+       
+        theme = Theme.get(theme_name = name)
+        ksbs_from_chosen_theme = ThemeKsb.select(ThemeKsb.ksb_id).where(ThemeKsb.theme_id == theme.id)
+        ksb_list = []
+        for ksb in ksbs_from_chosen_theme:
+            ksbs = Ksb.get(id = ksb.ksb_id) 
+            ksb_list.append(ksbs)
+
+ 
+        ksbs = [
+            {
+                "type": ksb.ksb_type,
+                "code": ksb.ksb_code,
+                "description": ksb.description,
+                "updated_at" : ksb.updated_at
+                
+            }
+            for ksb in ksb_list
+        ]
+        return jsonify(ksbs), 200
+   
+
+    except:
+        pass
+    
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

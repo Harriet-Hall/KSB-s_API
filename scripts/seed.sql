@@ -5,7 +5,7 @@
         theme_name VARCHAR(100)    NOT NULL
     );
     INSERT INTO theme (theme_name)
-    VALUES  ('Code Quality'), ('Meeting User Needs'), ('The CI/CD Pipeline'), ('Refreshing and Patching'), ('Operability'), ('Data Persistence'), ('Automation'), ('Data Security');
+    VALUES  ('Code Quality'), ('Meeting User Needs'), ('The CI CD Pipeline'), ('Refreshing and Patching'), ('Operability'), ('Data Persistence'), ('Automation'), ('Data Security');
 
 
     CREATE OR REPLACE FUNCTION trigger_set_timestamp()
@@ -53,7 +53,7 @@
 
     INSERT INTO themeksb (theme_id, ksb_id)
     SELECT 
-        (SELECT id FROM theme WHERE theme_name = 'The CI-CD Pipeline'),
+        (SELECT id FROM theme WHERE theme_name = 'The CI CD Pipeline'),
         (SELECT id FROM ksb WHERE description = 'Using cloud security tools and automating security in pipelines.');
 
     INSERT INTO themeksb (theme_id, ksb_id)

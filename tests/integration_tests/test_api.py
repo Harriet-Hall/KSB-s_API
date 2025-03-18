@@ -362,3 +362,12 @@ def test_updated_at_value_changes_when_ksb_is_updated(mock_client, test_database
     response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
     response_data = json.loads(response.data)
     assert response_data["updated_at"] != ksb_to_update.updated_at
+    
+def test_get_request_to_theme_endpoint_returns_ksbs_for_that_theme(mock_client, test_database):
+    response = mock_client.get("/ksbs/theme/code-quality")
+    response_data = json.loads(response.data)
+    assert len(response_data) == 2
+    
+    response = mock_client.get("/ksbs/theme/")
+    response_data = json.loads(response.data)
+    assert len(response_data) == 2
