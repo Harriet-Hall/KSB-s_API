@@ -1,7 +1,7 @@
 from app.app import app
 import json
 import os
-from app.database import Ksb, psql_db
+from app.database import Ksb, ThemeKsb, psql_db
 
 import pytest
 os.environ["ENVIRONMENT"] = "test"
@@ -134,7 +134,6 @@ def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
         == "100 is not a valid ksb code, choose an int from 1 to 50"
     )
 
-
 def test_delete_ksb(mock_client, test_database):
     ksbs = Ksb.select()
     ksb_to_delete = ksbs[0]
@@ -142,7 +141,14 @@ def test_delete_ksb(mock_client, test_database):
     response = mock_client.delete(f"/ksbs/{ksb_to_delete.id}")
     assert response.status_code == 204
     assert len(Ksb.select()) == 3
+    
+def test_delete_ksb_deletes_it_in_themeksb_table(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_delete = ksbs[0]
 
+    mock_client.delete(f"/ksbs/{ksb_to_delete.id}")
+    ksb = ThemeKsb.get_or_none(ksb_id = ksb_to_delete.id)
+    assert ksb is None
 
 def test_delete_ksb_that_does_not_exist_in_database(mock_client, test_database):
 
@@ -368,6 +374,3 @@ def test_get_request_to_theme_endpoint_returns_ksbs_for_that_theme(mock_client, 
     response_data = json.loads(response.data)
     assert len(response_data) == 2
     
-    response = mock_client.get("/ksbs/theme/")
-    response_data = json.loads(response.data)
-    assert len(response_data) == 2

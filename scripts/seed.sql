@@ -37,9 +37,10 @@
             ('Behaviour', 3, 'Takes ownership of deployed code and learns from failures.');  
 
     CREATE TABLE IF NOT EXISTS themeksb(
-        theme_id UUID REFERENCES theme(id),
-        ksb_id UUID REFERENCES ksb(id),
+        theme_id UUID REFERENCES theme(id)  ON DELETE CASCADE,
+        ksb_id UUID REFERENCES ksb(id)  ON DELETE CASCADE,
         PRIMARY KEY (theme_id, ksb_id)
+      
     );
     INSERT INTO themeksb (theme_id, ksb_id)
     SELECT 

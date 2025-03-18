@@ -81,7 +81,7 @@ def delete_ksb(uuid_str):
     try:
         uuid_obj = uuid.UUID(uuid_str)
         ksb_to_delete = Ksb.get(Ksb.id == uuid_obj)
-
+        
         if ksb_to_delete:
             ksb_to_delete.delete_instance()
             return jsonify({}), 204
@@ -92,7 +92,10 @@ def delete_ksb(uuid_str):
     except ValueError:
         return jsonify({"error": "uuid is invalid"}), 404
         
-       
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "Internal Server Error"}), 500    
+
              
 @app.get("/ksbs/<ksb_type>")
 def get_ksb_by_type(ksb_type):
@@ -208,13 +211,9 @@ def get_ksbs_by_theme(theme_name):
         ]
         return jsonify(ksbs), 200
    
+    except Exception:
+        return jsonify({"error": "Internal Server Error"}), 500
 
-    except:
-        pass
     
-
-
-
-
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

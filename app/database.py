@@ -85,7 +85,7 @@ class Ksb(BaseModel):
     super(Ksb, self).save(**kwargs)
 
 class ThemeKsb(BaseModel):
-    theme_id = ForeignKeyField(Theme, backref = 'ksbs')
-    ksb_id = ForeignKeyField(Ksb, backref = 'themes')
+    theme_id = ForeignKeyField(Theme, backref = 'ksbs', on_delete='CASCADE')
+    ksb_id = ForeignKeyField(Ksb, backref = 'themes', on_delete='CASCADE')
     class Meta:
         primary_key = CompositeKey('theme_id', 'ksb_id')
