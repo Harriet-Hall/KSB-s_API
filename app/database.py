@@ -53,7 +53,7 @@ class Ksb(BaseModel):
   id = UUIDField(primary_key=True, default=uuid.uuid4)
   ksb_type = CharField(null=True)
   ksb_code = IntegerField(null=True)
-  description = CharField()
+  description = TextField()
   created_at = DateTimeField(default=datetime.datetime.now)
   updated_at = DateTimeField(default=datetime.datetime.now)
 
@@ -89,4 +89,3 @@ class ThemeKsb(BaseModel):
     ksb_id = ForeignKeyField(Ksb, backref = 'themes')
     class Meta:
         primary_key = CompositeKey('theme_id', 'ksb_id')
-        
