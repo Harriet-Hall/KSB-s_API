@@ -1,3 +1,5 @@
+import uuid
+from datetime import datetime
 import pytest
 from peewee import *
 from app.database import Ksb, psql_db
@@ -21,6 +23,16 @@ def test_table_is_seeded(test_database):
     rows = Ksb.select()
     assert len(rows) == 4
 
+
+def test_table_contains_correct_data(test_database):
+    rows = Ksb.select()
+    row = rows[0]
+    assert isinstance(row.id, uuid.UUID)
+    assert isinstance(row.ksb_type, str)
+    assert isinstance(row.ksb_code, int)
+    assert isinstance(row.description, str)
+    assert isinstance(row.created_at, datetime)
+    assert isinstance(row.updated_at, datetime)
 
 def test_create_ksb_entry(test_database):
 

@@ -1,7 +1,9 @@
+import uuid
 import pytest
 from peewee import *
 from app.database import Theme, psql_db
 import os
+
 os.environ["ENVIRONMENT"] = "test"
 
 
@@ -20,10 +22,10 @@ def test_database():
 def test_table_is_seeded(test_database):
     rows = Theme.select()
     assert len(rows) == 8
-    
+
+
 def test_table_contains_correct_data(test_database):
     rows = Theme.select()
     row = rows[0]
-    assert row.id is not None 
+    assert isinstance(row.id, uuid.UUID)
     assert row.theme_name == "Code quality"
-    
