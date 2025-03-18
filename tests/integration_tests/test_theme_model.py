@@ -28,4 +28,4 @@ def test_table_contains_correct_data(test_database):
     rows = Theme.select()
     row = rows[0]
     assert isinstance(row.id, uuid.UUID)
-    assert row.theme_name == "Code quality"
+    assert row.theme_name == "Code Quality"

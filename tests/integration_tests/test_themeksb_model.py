@@ -19,12 +19,12 @@ def test_database():
 
 def test_table_is_created_with_correct_properties(test_database):
     data = (
-        ('code quality', [
+        ('Code Quality', [
             { 'ksb_type': 'Knowledge', 'ksb_code': 11, 'description': 'description for this ksb is ...'},
             { 'ksb_type': 'Skill', 'ksb_code': 12, 'description': 'description for this ksb is ...'},
             { 'ksb_type': 'Behaviour', 'ksb_code': 13, 'description': 'description for this ksb is ...'}
         ]),
-        ('operability', [
+        ('Operability', [
             { 'ksb_type': 'Knowledge', 'ksb_code': 21, 'description': 'description for this ksb is ...'},
             {'ksb_type': 'Skill', 'ksb_code': 22, 'description': 'description for this ksb is ...'},
             {'ksb_type': 'Behaviour', 'ksb_code': 23, 'description': 'Odescription for this ksb is ...'}
