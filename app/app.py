@@ -10,21 +10,33 @@ import uuid
 app = Flask(__name__)
 
 
+
+
+
 @app.get("/ksbs")
 def get_ksbs():
     try:
-        ksbs = Ksb.select()
+     
+        ksb_themes = ThemeKsb.select(ThemeKsb.ksb_id, Theme.theme_name).join(Theme).where(Theme.id == ThemeKsb.theme_id)
+        ksb = [k.ksb_id.id for k in ksb_themes]
+        print(ksb,"here")
+        
+        
         ksbs = [
             {
-                "id": ksb.id,
-                "type": ksb.ksb_type,
-                "code": ksb.ksb_code,
-                "description": ksb.description,
-                "created_at": ksb.created_at,
-                "updated_at" : ksb.updated_at
+                "id": ksb.ksb_id.id,
+                "type": ksb.ksb_id.ksb_type,
+                "code": ksb.ksb_id.ksb_code,
+                "description": ksb.ksb_id.description,
+                "created_at": ksb.ksb_id.created_at,
+                "updated_at": ksb.ksb_id.updated_at,
+                "theme": ksb.theme_id.theme_name
+            
             }
-            for ksb in ksbs
-        ]
+            for ksb in ksb_themes
+        ] 
+        print(ksbs, "ksbo")
+        
         return jsonify(ksbs)
     
     except Exception:

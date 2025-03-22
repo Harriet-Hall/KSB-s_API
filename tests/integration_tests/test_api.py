@@ -39,9 +39,17 @@ def test_get_request_to_ksbs_endpoint_returns_list_of_ksbs(mock_client, test_dat
     assert len(response_data) == 4
     keys = response_data[0].keys()
     for key in keys:
-        assert key in ["id", "type", "code", "description", "created_at", "updated_at"]
+        assert key in ["id", "type", "code", "description", "created_at", "updated_at", "theme"]
 
-
+def test_get_request_to_ksbs_endpoint_returns_correct_theme_for_each_ksb(mock_client, test_database):
+    response = mock_client.get("/ksbs")
+    response_data = json.loads(response.data)
+    for ksb in response_data:
+        ksb_description = ksb["description"]
+        ksb_theme = ksb["theme"]
+    if ksb_description == "General purpose programming and infrastructure-as-code.":
+        assert ksb_theme == "code quality"
+    
 def test_get_request_to_knowledge_endpoint_returns_200(mock_client, test_database):
     response = mock_client.get("/ksbs/knowledge")
     assert response.status_code == 200
@@ -382,7 +390,7 @@ def test_post_a_ksb_to_theme_endpoint(mock_client, test_database):
     theme = Theme.get(theme_name = "operability")
     response = mock_client.post("/ksbs/theme/operability", json=data)
     response_data = json.loads(response.data)
+    
 
     assert response_data["ksb_id"] == str(ksb.id)
     assert response_data["theme_id"] == str(theme.id)
-    
