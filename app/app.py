@@ -1,4 +1,5 @@
 import json
+from flask_cors import CORS
 from flask import Flask, jsonify, request
 from .database import Ksb, Theme, ThemeKsb
 from .utils.check_for_duplicates import check_for_duplicates
@@ -9,6 +10,8 @@ import uuid
 
 app = Flask(__name__)
 
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 
