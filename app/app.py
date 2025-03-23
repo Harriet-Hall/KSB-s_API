@@ -22,7 +22,6 @@ def get_ksbs():
      
         ksb_themes = ThemeKsb.select(ThemeKsb.ksb_id, Theme.theme_name).join(Theme).where(Theme.id == ThemeKsb.theme_id)
         ksb = [k.ksb_id.id for k in ksb_themes]
-        print(ksb,"here")
         
         
         ksbs = [
@@ -38,7 +37,6 @@ def get_ksbs():
             }
             for ksb in ksb_themes
         ] 
-        print(ksbs, "ksbo")
         
         return jsonify(ksbs)
     
@@ -54,6 +52,7 @@ def post_ksb(ksb_type):
         
     ksbs = Ksb.select()
     request_data = request.json
+  
     request_dict = {"ksb_type" : ksb_type.capitalize(), 
                     "ksb_code": request_data["code"],
                     "description": request_data["description"]
@@ -67,20 +66,25 @@ def post_ksb(ksb_type):
                   
             new_row = Ksb.create(**request_dict)
 
-            new_ksb = Ksb.select().where(
-                Ksb.ksb_type == new_row.ksb_type,
-                Ksb.ksb_code == new_row.ksb_code,
-                Ksb.description == new_row.description,
+            new_ksb = Ksb.get(
+                ksb_type = new_row.ksb_type,
+                ksb_code = new_row.ksb_code,
+                description = new_row.description,
             )
-            ksb = new_ksb[0]
+   
+            
+            theme = Theme.get(Theme.theme_name == request_data["theme"])
+   
+            ThemeKsb.create(ksb_id=new_ksb.id, theme_id=theme.id)
             
             return jsonify(
                 {
-                    "id": ksb.id,
-                    "type": ksb.ksb_type,
-                    "code": ksb.ksb_code,
-                    "description": ksb.description,
-                    "created_at": ksb.created_at,
+                    "id": new_ksb.id,
+                    "type": new_ksb.ksb_type,
+                    "code": new_ksb.ksb_code,
+                    "description": new_ksb.description,
+                    "created_at": new_ksb.created_at,
+                    "theme": request_data["theme"]
                     
                 }
             ), 201

@@ -93,7 +93,7 @@ def test_get_request_to_invalid_endpoint_returns_error(mock_client, test_databas
 
 
 def test_post_a_ksb_to_correct_ksbs_type_endpoint(mock_client, test_database):
-    data = {"code": 12, "description": "Test description"}
+    data = {"code": 12, "description": "Test description", "theme": "meeting user needs"}
     response = mock_client.post("/ksbs/knowledge", json=data)
     
     assert response.status_code == 201
@@ -103,12 +103,16 @@ def test_post_a_ksb_to_correct_ksbs_type_endpoint(mock_client, test_database):
     assert response_data["type"] == "Knowledge"
     assert response_data["code"] == 12
     assert response_data["description"] == "Test description"
+    assert response_data["theme"] == "meeting user needs"
+    
 
 
 def test_post_a_ksb_that_already_exists_returns_error(mock_client, test_database):
     data = {
         "code": 9,
         "description": "Using cloud security tools and automating security in pipelines.",
+        "theme": "meeting user needs"
+        
     }
 
     response = mock_client.post("/ksbs/skill", json=data)
@@ -122,6 +126,7 @@ def test_post_ksb_to_invalid_ksb_type_endpoint(mock_client, test_database):
     data = {
         "ksb_code": 10,
         "description": "Assess identified and potential security threats and take appropriate action based on likelihood v impact.",
+        "theme": "meeting user needs"
     }
     response = mock_client.post("/ksbs/invalid", json=data)
     assert response.status_code == 404
