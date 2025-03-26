@@ -21,7 +21,6 @@ def get_ksbs():
     try:
      
         ksb_themes = ThemeKsb.select(ThemeKsb.ksb_id, Theme.theme_name).join(Theme).where(Theme.id == ThemeKsb.theme_id)
-        ksb = [k.ksb_id.id for k in ksb_themes]
         
         
         ksbs = [
