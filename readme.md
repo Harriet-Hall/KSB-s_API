@@ -28,11 +28,13 @@ This API allows users to retrieve a list of all KSBs, filter KSBs by type, add n
 
 ### **POST a new KSB**  
 - **Endpoint:** `POST /ksbs/{type}` (`type` must be `knowledge`, `skill`, or `behaviour`)  
-- **Payload:**  
+- **Payload:**   (`theme` must be `code quality`, `meeting user needs`, `the ci cd pipeline`, `refreshing and patching`, `operability`, `data persistence`, `automation`, `data security`)
+
   ```json
   {
     "code": 12,
-    "description": "Automate tasks where it introduces improvements to the efficiency of business processes and reduces waste, considering the effort and cost of automation."
+    "description": "Automate tasks where it introduces improvements to the efficiency of business processes and reduces waste, considering the effort and cost of automation.",
+    "theme": "meeting user needs"
   }
 
 ### **DELETE a specific KSB by UUID** 
@@ -43,11 +45,10 @@ This API allows users to retrieve a list of all KSBs, filter KSBs by type, add n
 ### ••UPDATE/PUT a ksb**
 - **Endpoint:** `DELETE /ksbs/{uuid}`
 - **Example:** `/ksbs/43300ad3-d6ef-4807-a35f-73752b47d897`  
-- **Payload:** 
+- **Payload:** (`payload` can include `type` and/or `code` and/or `description` )
 ```json
 {
   "type": "knowledge", 
   "code": 12
 }
 ```
-(`payload` can include `type` and/or `code` and/or `description` )
