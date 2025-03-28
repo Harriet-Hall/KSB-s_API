@@ -19,9 +19,18 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.get("/ksbs")
 def get_ksbs():
     try:
-     
-        ksb_themes = ThemeKsb.select(ThemeKsb.ksb_id, Theme.theme_name).join(Theme).where(Theme.id == ThemeKsb.theme_id)
+
+        ksb_themes = (ThemeKsb
+            .select(ThemeKsb.ksb_id, Theme.theme_name)
+            .join(Theme)
+            .join(Ksb, on=(Ksb.id == ThemeKsb.ksb_id)) 
+            .where(Theme.id == ThemeKsb.theme_id)
+            .order_by(Ksb.updated_at.desc()))
         
+        for k in ksb_themes:
+            print(k.ksb_id.updated_at, "after")
+        
+        # print(ksb_themes)
         
         ksbs = [
             {
