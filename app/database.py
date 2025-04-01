@@ -8,7 +8,6 @@ from .utils.ksb_type_choices import KSB_TYPE_CHOICES
 psql_db = None
 if os.getenv('ENVIRONMENT') == 'test':
   
-  
    psql_db = PostgresqlDatabase( 
     "postgres",
     host="test_db",
@@ -16,7 +15,7 @@ if os.getenv('ENVIRONMENT') == 'test':
     password=os.getenv("POSTGRES_PASSWORD"),
     port=5432
     )
-   
+
 else:
 
   from .secrets_manager import get_secret

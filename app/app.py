@@ -10,7 +10,8 @@ import uuid
 
 app = Flask(__name__)
 
-cors = CORS(app)
+CORS(app, resources={r"/*": {"origins": "https://main.daoag95o4c1np.amplifyapp.com"}})
+
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
@@ -30,8 +31,7 @@ def get_ksbs():
         for k in ksb_themes:
             print(k.ksb_id.updated_at, "after")
         
-        # print(ksb_themes)
-        
+
         ksbs = [
             {
                 "id": ksb.ksb_id.id,
