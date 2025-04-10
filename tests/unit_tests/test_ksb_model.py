@@ -137,7 +137,7 @@ def test_ksb_description_validator_with_valid_ksb_description():
     assert ksb.description == "Test description"
 
 
-def test_ksb_description_validator_raises_error_escription_has_valid_length():
+def test_ksb_description_validator_raises_error_when_description_has_invalid_length():
     with pytest.raises(ValueError) as value_error:
         ksb = Ksb(
             id="acde070d-8c4c-4f0d-9d8a-162843c10456",
