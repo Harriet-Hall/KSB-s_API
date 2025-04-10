@@ -78,11 +78,12 @@ This API allows users to retrieve a list of all KSBs, filter KSBs by type, add n
 ### ••UPDATE/PUT a ksb**
 - **Endpoint:** `PUT /ksbs/{uuid}`
 - **Example:** `/ksbs/43300ad3-d6ef-4807-a35f-73752b47d897`  
-- **Payload:** (`payload` can include `type` and/or `code` and/or `description` )
+- **Payload:** (`payload` can include `type` and/or `code` and/or `description`, and/or `is_complete`)
 ```json
 {
   "type": "knowledge", 
-  "code": 12
+  "code": 12,
+  "is_complete": true
 }
 ```
 - **Response:** `204 OK`
@@ -90,6 +91,7 @@ This API allows users to retrieve a list of all KSBs, filter KSBs by type, add n
     invalid type - `400 - "type" is not a valid ksb_type`
     invalid code - `400 - "code" is not a valid ksb code, choose an int from 1 to 50`
     invalid description - `400 - description needs to be more than 15 characters and less than 300 characters in length`
+    invalid is_complete - `400 - is_complete must be a boolean (true or false)`
     ksb doesnt exist - `404 ksb with that uuid does not exist in database`
     invalid uuid - `404 uuid is invalid`
     internal error - `500 Internal Server Error`

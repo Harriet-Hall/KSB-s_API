@@ -55,6 +55,7 @@ class Ksb(BaseModel):
   description = TextField()
   created_at = DateTimeField(default=datetime.datetime.now)
   updated_at = DateTimeField(default=datetime.datetime.now)
+  is_complete = BooleanField(default=False)
 
 
   def ksb_type_validator(self):

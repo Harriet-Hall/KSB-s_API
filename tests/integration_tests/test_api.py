@@ -39,7 +39,7 @@ def test_get_request_to_ksbs_endpoint_returns_list_of_ksbs(mock_client, test_dat
     assert len(response_data) == 4
     keys = response_data[0].keys()
     for key in keys:
-        assert key in ["id", "type", "code", "description", "created_at", "updated_at", "theme"]
+        assert key in ["id", "type", "code", "description", "created_at", "updated_at", "theme", "is_complete"]
 
 def test_get_request_to_ksbs_endpoint_returns_correct_theme_for_each_ksb(mock_client, test_database):
     response = mock_client.get("/ksbs")
@@ -219,6 +219,27 @@ def test_update_ksb(mock_client, test_database):
     )
     assert len(Ksb.select()) == 4
 
+def test_update_ksb_is_complete_value(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[0]
+    data = {
+        "is_complete": True
+    }
+    response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
+    response_data = json.loads(response.data)
+    print(response_data)
+    assert response_data["is_complete"] == True
+    
+def test_update_ksb_is_complete_with_invalid_value(mock_client, test_database):
+    ksbs = Ksb.select()
+    ksb_to_update = ksbs[0]
+    data = {
+        "is_complete": "lll"
+    }
+    response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
+    response_data = json.loads(response.data)
+    assert response_data["error"] == "is_complete must be a boolean (true or false)"
+    
 
 def test_update_ksb_with_valid_uuid_but_ksb_does_not_exist_in_database(
     mock_client, test_database

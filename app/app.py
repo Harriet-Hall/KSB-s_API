@@ -40,7 +40,8 @@ def get_ksbs():
                 "description": ksb.ksb_id.description,
                 "created_at": ksb.ksb_id.created_at,
                 "updated_at": ksb.ksb_id.updated_at,
-                "theme": ksb.theme_id.theme_name
+                "theme": ksb.theme_id.theme_name,
+                "is_complete": ksb.ksb_id.is_complete
             
             }
             for ksb in ksb_themes
@@ -63,7 +64,8 @@ def post_ksb(ksb_type):
   
     request_dict = {"ksb_type" : ksb_type.capitalize(), 
                     "ksb_code": request_data["code"],
-                    "description": request_data["description"]
+                    "description": request_data["description"], 
+                    "is_complete": "false"
                     }
 
     if check_for_duplicates(ksbs, request_dict):
@@ -78,6 +80,7 @@ def post_ksb(ksb_type):
                 ksb_type = new_row.ksb_type,
                 ksb_code = new_row.ksb_code,
                 description = new_row.description,
+                is_complete = new_row.is_complete
             )
    
             
@@ -92,7 +95,8 @@ def post_ksb(ksb_type):
                     "code": new_ksb.ksb_code,
                     "description": new_ksb.description,
                     "created_at": new_ksb.created_at,
-                    "theme": request_data["theme"]
+                    "theme": request_data["theme"],
+                    "is_complete": new_ksb.is_complete
                     
                 }
             ), 201
@@ -128,6 +132,7 @@ def get_ksb_by_type(ksb_type):
 
     if ksb_type not in  KSB_TYPE_CHOICES:
         return  jsonify({"error": "endpoint does not exist"}), 404
+    
         
     try: 
         filtered_list = Ksb.select().where(Ksb.ksb_type == ksb_type.capitalize())
@@ -153,12 +158,11 @@ def get_ksb_by_type(ksb_type):
 def update_ksb(uuid_str):
   
     request_json = json.loads(request.data)
-    
- 
     try: 
-        
+
         uuid_obj = uuid.UUID(uuid_str)
         ksb_to_update = Ksb.get(Ksb.id == uuid_obj)
+        
 
      
         if "type" in request_json:
@@ -183,8 +187,15 @@ def update_ksb(uuid_str):
                 ksb_to_update.ksb_description_validator()
             except ValueError as value_error:
                 return jsonify({"error": str(value_error)}), 400
-       
             
+        if "is_complete" in request_json:
+            value = request_json["is_complete"]
+            if(isinstance(value, bool)):
+                ksb_to_update.is_complete = value
+            else:
+                return jsonify({"error": "is_complete must be a boolean (true or false)"}), 400
+
+     
         ksbs = Ksb.select()
         
         if check_for_valid_updates(ksbs, ksb_to_update):
@@ -200,7 +211,8 @@ def update_ksb(uuid_str):
                 "code": updated_ksb.ksb_code,
                 "description": updated_ksb.description,
                 "created_at": updated_ksb.created_at,
-                "updated_at" : updated_ksb.updated_at
+                "updated_at" : updated_ksb.updated_at,
+                "is_complete":  updated_ksb.is_complete
                 
             }), 200
        
