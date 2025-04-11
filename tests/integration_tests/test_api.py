@@ -163,6 +163,20 @@ def test_post_ksb_with_invalid_ksb_description(mock_client, test_database):
         == "description needs to be more than 15 characters and less than 300 characters in length"
     )
 
+def test_post_ksb_with_invalid_ksb_theme(mock_client, test_database):
+    data = {
+        "code": 10,
+        "description": "Assess identified and potential security threats and take appropriate action based on likelihood v impact.",
+        "theme": "invalid"
+        
+    }
+    response = mock_client.post("/ksbs/Behaviour", json=data)
+    assert response.status_code == 400
+    response_data = json.loads(response.data)
+    assert (
+        response_data["error"]
+        == "Invalid theme"
+    )
 
 def test_delete_ksb(mock_client, test_database):
     ksbs = Ksb.select()

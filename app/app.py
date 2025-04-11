@@ -1,6 +1,7 @@
 import json
 from flask_cors import CORS
 from flask import Flask, jsonify, request
+from app.utils.ksb_theme_choices import KSB_THEME_CHOICES
 from .database import Ksb, Theme, ThemeKsb
 from .utils.check_for_duplicates import check_for_duplicates
 from .utils.check_update_is_valid import check_for_valid_updates
@@ -65,8 +66,12 @@ def post_ksb(ksb_type):
                     "is_complete": "false"
                     }
 
+    if(request_data["theme"] not in KSB_THEME_CHOICES):
+            return jsonify({"error": "Invalid theme"}), 400
+            
+
     if check_for_duplicates(ksbs, request_dict):
-        return jsonify({"error" : "Ksb already exists in database"}), 409
+        return jsonify({"error" : "Some or all Ksb values already exists in database"}), 409
 
     else:
         try:
@@ -80,8 +85,9 @@ def post_ksb(ksb_type):
                 is_complete = new_row.is_complete
             )
    
-            
+         
             theme = Theme.get(Theme.theme_name == request_data["theme"])
+        
    
             ThemeKsb.create(ksb_id=new_ksb.id, theme_id=theme.id)
             

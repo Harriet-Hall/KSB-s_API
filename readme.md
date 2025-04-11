@@ -35,15 +35,6 @@ This API allows users to retrieve a list of all KSBs, filter KSBs by type, add n
   internal error - `500 Internal Server Error`
 
 
-### **GET a specific KSB by UUID**  
-- **Endpoint:** `GET /ksbs/{uuid}`  
-- **Example:** `/ksbs/43300ad3-d6ef-4807-a35f-73752b47d897`  
-- **Response:** `200 OK` (returns the requested KSB)  
-- **Error Response** 
-  wrong endpoint - `404 endpoint does not exist`
-  internal error - `500 Internal Server Error`
-
-
 ### **POST a new KSB**  
 - **Endpoint:** `POST /ksbs/{type}` (`type` must be `knowledge`, `skill`, or `behaviour`)  
 - **Payload:**   (`theme` must be `code quality`, `meeting user needs`, `the ci cd pipeline`, `refreshing and patching`, `operability`, `data persistence`, `automation`, `data security`)
@@ -54,13 +45,13 @@ This API allows users to retrieve a list of all KSBs, filter KSBs by type, add n
     "description": "Automate tasks where it introduces improvements to the efficiency of business processes and reduces waste, considering the effort and cost of automation.",
     "theme": "meeting user needs"
   }
-- **Response:** `201 OK`
+- **Response:** `201 CREATED`
 - **Error Response** 
   wrong endpoint - `404 endpoint does not exist`
   duplicate kSB - `409 Ksb already exists in database`
-  invalid type - `400 - "type" is not a valid ksb_type`
   invalid code - `400 - "code" is not a valid ksb code, choose an int from 1 to 50`
   invalid description - `400 - description needs to be more than 15 characters and less than 300 characters in length`
+  invalid theme - `400 - "Invalid theme`
   internal error - `500 Internal Server Error`
 
 
