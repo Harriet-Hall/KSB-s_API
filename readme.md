@@ -48,7 +48,7 @@ This API allows users to retrieve a list of all KSBs, filter KSBs by type, add n
 - **Response:** `201 CREATED`
 - **Error Response** 
   wrong endpoint - `404 endpoint does not exist`
-  duplicate kSB - `409 Ksb already exists in database`
+  duplicate kSB - `409 Some or all Ksb values already exists in database`
   invalid code - `400 - "code" is not a valid ksb code, choose an int from 1 to 50`
   invalid description - `400 - description needs to be more than 15 characters and less than 300 characters in length`
   invalid theme - `400 - "Invalid theme`
