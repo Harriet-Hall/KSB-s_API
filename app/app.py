@@ -28,10 +28,7 @@ def get_ksbs():
             .where(Theme.id == ThemeKsb.theme_id)
             .order_by(Ksb.updated_at.desc()))
         
-        for k in ksb_themes:
-            print(k.ksb_id.updated_at, "after")
-        
-
+    
         ksbs = [
             {
                 "id": ksb.ksb_id.id,

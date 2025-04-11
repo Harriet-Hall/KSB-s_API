@@ -227,7 +227,7 @@ def test_update_ksb_is_complete_value(mock_client, test_database):
     }
     response = mock_client.put(f"/ksbs/{ksb_to_update.id}", json=data)
     response_data = json.loads(response.data)
-    print(response_data)
+
     assert response_data["is_complete"] == True
     
 def test_update_ksb_is_complete_with_invalid_value(mock_client, test_database):
