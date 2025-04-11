@@ -107,21 +107,6 @@ def test_post_a_ksb_to_correct_ksbs_type_endpoint(mock_client, test_database):
     
 
 
-def test_post_a_ksb_that_already_exists_returns_error(mock_client, test_database):
-    data = {
-        "code": 9,
-        "description": "Using cloud security tools and automating security in pipelines.",
-        "theme": "meeting user needs"
-        
-    }
-
-    response = mock_client.post("/ksbs/skill", json=data)
-    assert response.status_code == 409
-    response_data = json.loads(response.data)
-    assert response_data["error"] == "Ksb already exists in database"
-    assert len(Ksb.select()) == 4
-
-
 def test_post_ksb_to_invalid_ksb_type_endpoint(mock_client, test_database):
     data = {
         "ksb_code": 10,
@@ -134,10 +119,26 @@ def test_post_ksb_to_invalid_ksb_type_endpoint(mock_client, test_database):
     assert response_data["error"] == "endpoint does not exist"
 
 
+def test_post_a_ksb_that_already_exists_returns_error(mock_client, test_database):
+    data = {
+        "code": 9,
+        "description": "Using cloud security tools and automating security in pipelines.",
+        "theme": "meeting user needs"
+        
+    }
+
+    response = mock_client.post("/ksbs/skill", json=data)
+    assert response.status_code == 409
+    response_data = json.loads(response.data)
+    assert response_data["error"] == "Some or all Ksb values already exists in database"
+    assert len(Ksb.select()) == 4
+
+
 def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
     data = {
         "code": 100,
         "description": "Assess identified and potential security threats and take appropriate action based on likelihood v impact.",
+        "theme": "meeting user needs"
     }
     response = mock_client.post("/ksbs/Behaviour", json=data)
     assert response.status_code == 400
@@ -146,6 +147,22 @@ def test_post_ksb_with_invalid_ksb_code(mock_client, test_database):
         response_data["error"]
         == "100 is not a valid ksb code, choose an int from 1 to 50"
     )
+    
+def test_post_ksb_with_invalid_ksb_description(mock_client, test_database):
+    data = {
+        "code": 10,
+        "description": "",
+        "theme": "code quality"
+        
+    }
+    response = mock_client.post("/ksbs/Behaviour", json=data)
+    assert response.status_code == 400
+    response_data = json.loads(response.data)
+    assert (
+        response_data["error"]
+        == "description needs to be more than 15 characters and less than 300 characters in length"
+    )
+
 
 def test_delete_ksb(mock_client, test_database):
     ksbs = Ksb.select()
