@@ -11,7 +11,7 @@ import uuid
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": "https://main.daoag95o4c1np.amplifyapp.com"}})
+CORS(app, origins=["http://localhost:3001"])
 
 app.config['CORS_HEADERS'] = 'Content-Type'
 
