@@ -10,8 +10,7 @@ from peewee import DoesNotExist
 import uuid
 
 app = Flask(__name__)
-
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, origins=["https://main.daoag95o4c1np.amplifyapp.com", "http://localhost:3000"])
 
 app.config['CORS_HEADERS'] = 'Content-Type'
 
