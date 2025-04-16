@@ -104,6 +104,7 @@ def test_post_a_ksb_to_correct_ksbs_type_endpoint(mock_client, test_database):
     assert response_data["code"] == 12
     assert response_data["description"] == "Test description"
     assert response_data["theme"] == "meeting user needs"
+    assert response_data["is_complete"] == False
     
 
 

@@ -63,7 +63,7 @@ def post_ksb(ksb_type):
     request_dict = {"ksb_type" : ksb_type.capitalize(), 
                     "ksb_code": request_data["code"],
                     "description": request_data["description"], 
-                    "is_complete": "false"
+                    "is_complete": False
                     }
 
     if(request_data["theme"] not in KSB_THEME_CHOICES):
